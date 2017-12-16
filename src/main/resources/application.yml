@@ -1,0 +1,61 @@
+server:
+    port: 8061
+    context-path: /
+    session:
+      timeout: 1800
+spring:
+    profiles:
+        active: dev
+    datasource:
+        # 使用druid数据源
+        type: com.alibaba.druid.pool.DruidDataSource
+        druid:
+            filters: stat,wall
+            min-idle: 1
+            initial-size: 1
+            max-active: 20
+            max-wait: 60000
+            validation-query: SELECT 1 FROM DUAL
+            test-while-idle: true
+            time-between-eviction-runs-millis: 60000
+            min-evictable-idle-time-millis: 300000
+            use-global-data-source-stat: true
+            connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=2000
+            web-stat-filter:
+              url-pattern: /*
+              exclusions: '*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*'
+            stat-view-servlet:
+              url-pattern: /druid/*
+              reset-enable: false
+              login-username: admin
+              login-password: 123456
+    http:
+          multipart:
+            max-file-size: 20MB
+    task:
+      pool:
+        corePoolSize: 10
+        queueCapacity: 50
+        maxPoolSize: 100
+        keepAliveSeconds: 300
+    mvc:
+      throw-exception-if-no-handler-found: true
+
+
+
+mybatis:
+    type-aliases-package: com.xinge.demo.model.domain
+    mapper-locations: classpath:mapper/*.xml
+
+mapper:
+    mappers: com.xinge.demo.common.util.MyMapper
+    not-empty: false
+    identity: MYSQL
+    style: normal
+
+pagehelper:
+  helper-dialect: mysql
+  page-size-zero: 'true'
+  reasonable: 'false'
+  support-methods-arguments: 'false'
+  params: pageNum=pageNum;pageSize=PageSize;
