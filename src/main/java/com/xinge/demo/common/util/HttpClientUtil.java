@@ -12,15 +12,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.LayeredConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContextBuilder;
-import org.apache.http.conn.ssl.SSLContexts;
-import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
@@ -29,7 +20,6 @@ import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.client.LaxRedirectStrategy;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -37,41 +27,39 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.net.ssl.SSLContext;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 /**
  * 功能说明: HttpClient工具类；支持http/https、单向/双向认证；默认执行后自动关闭；
+ *
+ * @author duanxq
  */
 public class HttpClientUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
+    private static HttpClientUtil instance;
+    private HttpClientBuilder httpClientBuilder;
+    private IdleConnectionMonitorThread idleConnectionMonitorThread;
 
     private Charset charset = StandardCharsets.UTF_8;
-    private ContentType content_type = ContentType.APPLICATION_FORM_URLENCODED.withCharset(charset);
-
-    private int timeout = 60 * 1000; // 60秒
-
-    private PoolingHttpClientConnectionManager connManager;
-    private HttpHost proxyHost;// 代理地址
-
-    private static Map<String, Registry<ConnectionSocketFactory>> registryMap = new HashMap<String, Registry<ConnectionSocketFactory>>();
+    private ContentType contentType = ContentType.APPLICATION_FORM_URLENCODED.withCharset(charset);
+    /**
+     * 超时时间
+     */
+    private int timeout = 5 * 1000;
+    /**
+     * 代理地址
+     */
+    private HttpHost proxyHost;
 
     /**
      * 构造器
@@ -79,44 +67,23 @@ public class HttpClientUtil {
     private HttpClientUtil() {
     }
 
-    /**
-     * 获取默认私钥实例，用于http请求、https单向认证请求、或默认证书的https双向认证请求
-     * 默认私钥未配置时，返回实例仅适用于http请求、https单向认证请求
-     *
-     * @return
-     */
+
     public static HttpClientUtil getInstance() {
-        String keyStore = System.getProperty("ssl.keyStore");
-        String storePass = System.getProperty("ssl.storePass");
-        String storeType = System.getProperty("ssl.storeType");
-        return getInstance(keyStore, storePass, storeType);
-    }
-
-    /**
-     * 获取指定私钥实例，用于指定证书的https双向认证请求
-     *
-     * @param keyStore
-     * @param keyPass
-     * @param storeType JKS--默认,JCEKS, PKCS12 and PKCS11
-     * @return
-     */
-    public static HttpClientUtil getInstance(String keyStore, String keyPass, String storeType) {
-        HttpClientUtil instance = new HttpClientUtil();
-        Registry<ConnectionSocketFactory> reg = instance.registry(keyStore, keyPass, storeType);
-        // 设置连接管理器
-        PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager(reg);
-        connManager.setMaxTotal(200);
-        connManager.setDefaultMaxPerRoute(20);
-        new IdleConnectionMonitorThread(connManager).start();
-
-        // RequestConfig.Builder builder = RequestConfig.custom();
-        // builder.setConnectionRequestTimeout(TIMEOUT).setConnectTimeout(TIMEOUT).setSocketTimeout(TIMEOUT);
-        // RequestConfig requestConfig = builder.build();
-        // httpBuilder.setDefaultRequestConfig(requestConfig);
-
-        // util.cookieStore = new BasicCookieStore();
-        // httpBuilder.setDefaultCookieStore(util.cookieStore);
-        instance.connManager = connManager;
+        if (instance == null) {
+            synchronized (HttpClientUtil.class) {
+                if (instance == null) {
+                    // 设置连接管理器
+                    PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
+                    connManager.setMaxTotal(200);
+                    connManager.setDefaultMaxPerRoute(20);
+                    instance = new HttpClientUtil();
+                    IdleConnectionMonitorThread idleConnectionMonitorThread = new IdleConnectionMonitorThread(connManager);
+                    idleConnectionMonitorThread.start();
+                    instance.idleConnectionMonitorThread = idleConnectionMonitorThread;
+                    instance.httpClientBuilder = HttpClients.custom().setConnectionManager(connManager);
+                }
+            }
+        }
         return instance;
     }
 
@@ -127,103 +94,15 @@ public class HttpClientUtil {
      */
     public void setCharset(Charset charset) {
         this.charset = charset;
-        this.content_type = this.content_type.withCharset(charset);
+        this.contentType = this.contentType.withCharset(charset);
     }
 
-    public void setContent_type(ContentType content_type) {
-        this.content_type = content_type;
+    public void setContentType(ContentType contentType) {
+        this.contentType = contentType;
     }
 
     public void setTimeout(int timeout) {
         this.timeout = timeout;
-    }
-
-    /**
-     * 静态同步管理，避免重复加载证书
-     *
-     * @param keyStore
-     * @param keyPass
-     * @param storeType
-     * @return
-     */
-    private Registry<ConnectionSocketFactory> registry(String keyStore, String keyPass, String storeType) {
-        Registry<ConnectionSocketFactory> registry = null;
-        synchronized (registryMap) {
-            if (registryMap.containsKey(keyStore)) {
-                registry = registryMap.get(keyStore);
-            } else {
-                RegistryBuilder<ConnectionSocketFactory> registryBuilder = RegistryBuilder.<ConnectionSocketFactory>create();
-                ConnectionSocketFactory plainSF = new PlainConnectionSocketFactory();
-                registryBuilder.register("http", plainSF);
-                // 指定信任密钥存储对象和连接套接字工厂
-                try {
-                    SSLContextBuilder sslBuilder = SSLContexts.custom().useTLS();
-                    this.trustAllCertificate(sslBuilder);
-                    if (!StringUtils.isEmpty(keyStore) && !StringUtils.isEmpty(keyPass)) {
-                        loadClientCertificate(sslBuilder, keyStore, keyPass, storeType);
-                    }
-                    SSLContext sslContext = sslBuilder.build();
-                    LayeredConnectionSocketFactory sslSF = new SSLConnectionSocketFactory(sslContext, new String[]{"TLSv1", "TLSv1.1", "TLSv1.2", "SSLv2Hello", "SSLv3"}, null,
-                            SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
-                    registryBuilder.register("https", sslSF);
-                } catch (Exception e) {
-                    logger.error("信任服务器证书发生错误", e);
-                }
-                registry = registryBuilder.build();
-                registryMap.put(keyStore, registry);
-            }
-            registryMap.notify();
-        }
-
-        return registry;
-    }
-
-    /**
-     * 加载客户端证书
-     *
-     * @param sslBuilder
-     * @param keyStore
-     * @param keyPass
-     * @param storeType
-     */
-    private void loadClientCertificate(SSLContextBuilder sslBuilder, String keyStore, String keyPass, String storeType) {
-        storeType = StringUtils.defaultIfBlank(storeType, KeyStore.getDefaultType());
-        FileInputStream instream = null;
-        try {
-            instream = new FileInputStream(new File(keyStore));
-            KeyStore keystore = KeyStore.getInstance(storeType);
-            keystore.load(instream, keyPass.toCharArray());
-            sslBuilder.loadKeyMaterial(keystore, keyPass.toCharArray()).build();
-        } catch (Exception e) {
-            logger.error("加载客户端证书发生错误", e);
-        } finally {
-            try {
-                if (instream != null) {
-                    instream.close();
-                }
-            } catch (IOException e) {
-                logger.error("加载客户端证书发生错误", e);
-            }
-        }
-    }
-
-    /**
-     * 信任所有服务器证书
-     *
-     * @param sslBuilder
-     * @throws KeyStoreException
-     * @throws NoSuchAlgorithmException
-     */
-    private void trustAllCertificate(SSLContextBuilder sslBuilder) throws KeyStoreException, NoSuchAlgorithmException {
-        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        sslBuilder.loadTrustMaterial(trustStore, new TrustStrategy() {
-
-            // 信任所有
-            @Override
-            public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
-                return true;
-            }
-        });
     }
 
     /**
@@ -233,17 +112,18 @@ public class HttpClientUtil {
      * @return
      */
     private boolean isMultipart(Map<String, Object> params) {
-        if (params == null || params.size() < 0) {
+        if (params == null || params.isEmpty()) {
             return false;
         }
-        if (StringUtils.contains(this.content_type.toString(), "multipart/form-data")) {
+        if (StringUtils.contains(this.contentType.toString(), "multipart/form-data")) {
             return true;
         }
         for (Entry<String, Object> entry : params.entrySet()) {
             Object pvalue = entry.getValue();
             if (pvalue == null) {
                 continue;
-            } else if (pvalue instanceof File || pvalue instanceof InputStreamBody || pvalue instanceof ByteArrayBody) {
+            }
+            if (pvalue instanceof File || pvalue instanceof InputStreamBody || pvalue instanceof ByteArrayBody) {
                 return true;
             } else if (pvalue instanceof List) {
                 for (Object obj : (List) pvalue) {
@@ -289,7 +169,7 @@ public class HttpClientUtil {
             }
 
             if (pvalue instanceof String) {
-                builder.addTextBody(pname, String.valueOf(pvalue), content_type);
+                builder.addTextBody(pname, String.valueOf(pvalue), contentType);
                 continue;
             }
 
@@ -301,7 +181,7 @@ public class HttpClientUtil {
             if (pvalue instanceof MultipartFile) {
                 MultipartFile multipartFile = (MultipartFile) pvalue;
                 try {
-                    builder.addPart(pname, new InputStreamBody(multipartFile.getInputStream(), content_type, multipartFile.getOriginalFilename()));
+                    builder.addPart(pname, new InputStreamBody(multipartFile.getInputStream(), contentType, multipartFile.getOriginalFilename()));
                 } catch (IOException e) {
                     logger.error(e.getMessage(), e);
                 }
@@ -320,21 +200,21 @@ public class HttpClientUtil {
 
             if (pvalue instanceof List) {
                 for (Object obj : (List) pvalue) {
-                    builder.addTextBody(pname, String.valueOf(obj), content_type);
+                    builder.addTextBody(pname, String.valueOf(obj), contentType);
                 }
                 continue;
             }
 
             if (pvalue.getClass().isArray()) {
                 Object[] array = (Object[]) pvalue;
-                for (int i = 0; i < array.length; i++) {
-                    builder.addTextBody(pname, String.valueOf(array[i]), content_type);
+                for (Object anArray : array) {
+                    builder.addTextBody(pname, String.valueOf(anArray), contentType);
                 }
                 continue;
             }
 
             // 兼容处理，long、int等基本类型
-            builder.addTextBody(pname, String.valueOf(pvalue), content_type);
+            builder.addTextBody(pname, String.valueOf(pvalue), contentType);
         }
 
         return builder.build();
@@ -372,10 +252,10 @@ public class HttpClientUtil {
      * @throws IOException
      * @throws ClientProtocolException
      */
-    public byte[] httpPost(String url, String xml, List<Header> headers) throws ClientProtocolException, IOException {
+    public byte[] httpPost(String url, String xml, List<Header> headers) throws IOException {
         HttpPost httppost = new HttpPost(url);
-        if (StringUtils.contains(this.content_type.toString(), "x-www-form-urlencoded")) {
-            this.setContent_type(ContentType.APPLICATION_XML.withCharset(charset));
+        if (StringUtils.contains(this.contentType.toString(), "x-www-form-urlencoded")) {
+            this.setContentType(ContentType.APPLICATION_XML.withCharset(charset));
         }
         HttpEntity reqEntity = buildHttpEntry(xml);
         httppost.setEntity(reqEntity);
@@ -392,9 +272,9 @@ public class HttpClientUtil {
      * @throws IOException
      * @throws ClientProtocolException
      */
-    public byte[] httpPost(String url, String xml, ContentType content_type, List<Header> headers) throws ClientProtocolException, IOException {
+    public byte[] httpPost(String url, String xml, ContentType content_type, List<Header> headers) throws IOException {
         HttpPost httppost = new HttpPost(url);
-        this.setContent_type(content_type.withCharset(charset));
+        this.setContentType(content_type.withCharset(charset));
         HttpEntity reqEntity = buildHttpEntry(xml);
         httppost.setEntity(reqEntity);
         return execute(httppost, headers);
@@ -410,7 +290,7 @@ public class HttpClientUtil {
     private HttpEntity buildHttpEntry(Object obj) {
         EntityBuilder builder = EntityBuilder.create();
         builder.setContentEncoding(this.charset.name());
-        builder.setContentType(this.content_type);
+        builder.setContentType(this.contentType);
         if (obj instanceof File) {
             builder.setFile((File) obj);
         } else if (obj instanceof InputStream) {
@@ -418,7 +298,7 @@ public class HttpClientUtil {
         } else if (obj instanceof byte[]) {
             builder.setBinary((byte[]) obj);
         } else if (obj instanceof Map) {
-            List<NameValuePair> list = new ArrayList<NameValuePair>();
+            List<NameValuePair> list = new ArrayList<>();
             for (Entry<String, Object> entry : ((Map<String, Object>) obj).entrySet()) {
                 if (entry.getValue() == null) {
                     continue;
@@ -454,7 +334,7 @@ public class HttpClientUtil {
      */
     public byte[] httpPost(String url, byte[] binary, List<Header> headers) throws ClientProtocolException, IOException {
         HttpPost httppost = new HttpPost(url);
-        this.setContent_type(ContentType.APPLICATION_OCTET_STREAM.withCharset(charset));
+        this.setContentType(ContentType.APPLICATION_OCTET_STREAM.withCharset(charset));
         HttpEntity reqEntity = buildHttpEntry(binary);
         httppost.setEntity(reqEntity);
         return execute(httppost, headers);
@@ -469,7 +349,7 @@ public class HttpClientUtil {
      * @throws IOException
      * @throws ClientProtocolException
      */
-    public byte[] httpGet(String url, List<Header> headers) throws ClientProtocolException, IOException {
+    public byte[] httpGet(String url, List<Header> headers) throws IOException {
         HttpGet httpget = new HttpGet(url);
         return execute(httpget, headers);
     }
@@ -483,7 +363,7 @@ public class HttpClientUtil {
      * @throws IOException
      * @throws ClientProtocolException
      */
-    public byte[] httpPost(String url, List<Header> headers) throws ClientProtocolException, IOException {
+    public byte[] httpPost(String url, List<Header> headers) throws IOException {
         HttpPost httpPost = new HttpPost(url);
         return execute(httpPost, headers);
     }
@@ -505,21 +385,18 @@ public class HttpClientUtil {
             }
         } else if (headers == null) {
             // 如果入参的headers为null,后面headers.add(header)是返回不出去的。这一句只是为了避免空指针异常
-            headers = new ArrayList<Header>();
+            headers = new ArrayList<>();
         }
-
-        HttpClientBuilder httpBuilder = HttpClients.custom().setRedirectStrategy(new LaxRedirectStrategy());
-        httpBuilder.setConnectionManager(connManager);
-        CloseableHttpClient httpclient = null;
+        CloseableHttpClient httpclient;
         CloseableHttpResponse response = null;
         try {
-            if (getProxyHost() != null) {
-                httpclient = httpBuilder.setProxy(getProxyHost()).build();
+            if (proxyHost != null) {
+                httpclient = httpClientBuilder.setProxy(proxyHost).build();
             } else {
-                httpclient = httpBuilder.build();
+                httpclient = httpClientBuilder.build();
             }
-            request.getParams().setParameter("Connection", "close");
-            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build();// 设置请求和传输超时时间
+            // 设置请求和传输超时时间
+            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build();
             request.setConfig(requestConfig);
             response = httpclient.execute(request);
             for (Header header : response.getAllHeaders()) {
@@ -528,18 +405,11 @@ public class HttpClientUtil {
                     headers.add(header);
                 }
             }
+            HttpEntity entity = response.getEntity();
+            byte[] data = EntityUtils.toByteArray(entity);
             if (response.getStatusLine().getStatusCode() == HttpServletResponse.SC_OK) {
-                HttpEntity entity = response.getEntity();
-                byte[] data = EntityUtils.toByteArray(entity);
                 return data;
             } else {
-                HttpEntity entity = response.getEntity();
-                byte[] data = null;
-                try {
-                    data = EntityUtils.toByteArray(entity);
-                } catch (Exception ignore) {
-                    //
-                }
                 String dataStr = data == null ? "网络请求发生异常:" + response.getStatusLine() + " URI=" + request.getURI() : new String(data, StandardCharsets.UTF_8);
                 logger.warn("网络请求发生异常:" + dataStr);
                 throw new RuntimeException("网络请求发生异常:" + response.getStatusLine());
@@ -560,28 +430,7 @@ public class HttpClientUtil {
                     logger.warn("关闭response发生错误", e);
                 }
             }
-            // 使用连接池，不能关闭httpclient
-            // if (httpclient != null) {
-            // try {
-            // httpclient.close();
-            // } catch (Exception e) {
-            // logger.warn("关闭httpclient发生错误", e);
-            // }
-            // }
         }
-    }
-
-    /**
-     * @param autoClose
-     * @deprecated 设置连接自动关闭，默认为true；
-     * 若设置为false，则连续调用可保持会话，使用后显示调用close方法；
-     * 保持会话时传入header不会生效
-     */
-    public void setAutomaticClose(boolean autoClose) {
-    }
-
-    public HttpHost getProxyHost() {
-        return proxyHost;
     }
 
     public void setProxyHost(HttpHost proxyHost) {
@@ -597,6 +446,6 @@ public class HttpClientUtil {
      */
     @Override
     public void finalize() {
-        connManager.close();
+        idleConnectionMonitorThread.shutdown();
     }
 }
