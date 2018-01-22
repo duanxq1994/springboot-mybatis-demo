@@ -48,7 +48,6 @@ public class HttpClientUtil {
     private static final Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
     private static HttpClientUtil instance;
     private HttpClientBuilder httpClientBuilder;
-    private IdleConnectionMonitorThread idleConnectionMonitorThread;
 
     private Charset charset = StandardCharsets.UTF_8;
     private ContentType contentType = ContentType.APPLICATION_FORM_URLENCODED.withCharset(charset);
@@ -76,10 +75,9 @@ public class HttpClientUtil {
                     PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
                     connManager.setMaxTotal(200);
                     connManager.setDefaultMaxPerRoute(20);
-                    instance = new HttpClientUtil();
                     IdleConnectionMonitorThread idleConnectionMonitorThread = new IdleConnectionMonitorThread(connManager);
                     idleConnectionMonitorThread.start();
-                    instance.idleConnectionMonitorThread = idleConnectionMonitorThread;
+                    instance = new HttpClientUtil();
                     instance.httpClientBuilder = HttpClients.custom().setConnectionManager(connManager);
                 }
             }
@@ -441,11 +439,4 @@ public class HttpClientUtil {
         this.proxyHost = new HttpHost(hostname, port);
     }
 
-    /**
-     * 垃圾回收时关闭
-     */
-    @Override
-    public void finalize() {
-        idleConnectionMonitorThread.shutdown();
-    }
 }
