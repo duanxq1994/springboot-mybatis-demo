@@ -1,5 +1,6 @@
 package com.xinge.demo.common.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.conn.HttpClientConnectionManager;
 
 import java.util.concurrent.TimeUnit;
@@ -10,6 +11,7 @@ import java.util.concurrent.TimeUnit;
  * @author duanxq
  * @date 2018/01/23
  */
+@Slf4j
 public class IdleConnectionMonitorThread extends Thread {
 
     private final HttpClientConnectionManager connMgr;
@@ -23,16 +25,16 @@ public class IdleConnectionMonitorThread extends Thread {
 
     @Override
     public void run() {
-        while (true) {
-            try {
+        try {
+            while (true) {
                 Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                // 关闭失效的连接
+                connMgr.closeExpiredConnections();
+                // 可选的, 关闭30秒内不活动的连接
+                connMgr.closeIdleConnections(30, TimeUnit.SECONDS);
             }
-            // 关闭失效的连接
-            connMgr.closeExpiredConnections();
-            // 可选的, 关闭30秒内不活动的连接
-            connMgr.closeIdleConnections(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            log.error("", e);
         }
     }
 
