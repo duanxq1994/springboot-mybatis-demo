@@ -31,6 +31,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -270,9 +272,9 @@ public class HttpClientUtil {
      * @throws IOException
      * @throws ClientProtocolException
      */
-    public byte[] httpPost(String url, String xml, ContentType content_type, List<Header> headers) throws IOException {
+    public byte[] httpPost(String url, String xml, ContentType contentType, List<Header> headers) throws IOException {
         HttpPost httppost = new HttpPost(url);
-        this.setContentType(content_type.withCharset(charset));
+        this.setContentType(contentType.withCharset(charset));
         HttpEntity reqEntity = buildHttpEntry(xml);
         httppost.setEntity(reqEntity);
         return execute(httppost, headers);
@@ -350,6 +352,56 @@ public class HttpClientUtil {
     public byte[] httpGet(String url, List<Header> headers) throws IOException {
         HttpGet httpget = new HttpGet(url);
         return execute(httpget, headers);
+    }
+
+    /**
+     * GET方式请求，支持http/https
+     *
+     * @param url
+     * @param params
+     * @param headers
+     * @return
+     * @throws IOException
+     */
+    public byte[] httpGet(String url, Map<String, String> params, List<Header> headers) throws IOException {
+        String buildUrl = buildUrl(url, params);
+        return httpGet(buildUrl, headers);
+    }
+
+    /**
+     * 构建get请求参数
+     *
+     * @param url
+     * @param querys
+     * @return
+     * @throws UnsupportedEncodingException
+     */
+    private String buildUrl(String url, Map<String, String> querys)
+            throws UnsupportedEncodingException {
+        StringBuilder sbUrl = new StringBuilder();
+        sbUrl.append(url);
+        if (null != querys) {
+            StringBuilder sbQuery = new StringBuilder();
+            for (Map.Entry<String, String> query : querys.entrySet()) {
+                if (0 < sbQuery.length()) {
+                    sbQuery.append("&");
+                }
+                if (StringUtils.isBlank(query.getKey()) && !StringUtils.isBlank(query.getValue())) {
+                    sbQuery.append(query.getValue());
+                }
+                if (!StringUtils.isBlank(query.getKey())) {
+                    sbQuery.append(query.getKey());
+                    if (!StringUtils.isBlank(query.getValue())) {
+                        sbQuery.append("=");
+                        sbQuery.append(URLEncoder.encode(query.getValue(), "utf-8"));
+                    }
+                }
+            }
+            if (0 < sbQuery.length()) {
+                sbUrl.append("?").append(sbQuery);
+            }
+        }
+        return sbUrl.toString();
     }
 
     /**
