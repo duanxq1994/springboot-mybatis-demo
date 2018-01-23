@@ -5,12 +5,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * created by duanxq on 2017/5/19
+ *
+ * @author duanxq
+ * @date 2017/5/19
  */
 public class CookieUtil {
 
-    private static final int age = 60 * 60 * 24 * 365;//设置cookie过期时间，默认一年
-    private static final boolean httpOnly = true;//默认httpOnly
+    /**
+     * 设置cookie过期时间，默认一年
+     */
+    private static final int AGE = 60 * 60 * 24 * 365;
+    /**
+     * 默认httpOnly
+     */
+    private static final boolean HTTP_ONLY = true;
 
     /**
      * 添加cookie
@@ -20,7 +28,7 @@ public class CookieUtil {
      * @param value
      */
     public static void addCookie(HttpServletResponse response, String name, String value) {
-        addCookie(response, name, value, age, httpOnly);
+        addCookie(response, name, value, AGE, HTTP_ONLY);
     }
 
     /**
@@ -32,7 +40,7 @@ public class CookieUtil {
      * @param age
      */
     public static void addCookie(HttpServletResponse response, String name, String value, int age) {
-        addCookie(response, name, value, age, httpOnly);
+        addCookie(response, name, value, age, HTTP_ONLY);
     }
 
     /**
@@ -44,7 +52,7 @@ public class CookieUtil {
      * @param httpOnly
      */
     public static void addCookie(HttpServletResponse response, String name, String value, boolean httpOnly) {
-        addCookie(response, name, value, age, httpOnly);
+        addCookie(response, name, value, AGE, httpOnly);
     }
 
     /**
@@ -59,7 +67,8 @@ public class CookieUtil {
     public static void addCookie(HttpServletResponse response, String name, String value, int age, boolean httpOnly) {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
-        cookie.setMaxAge(age);//设置cookie过期时间。0，立即删除。负数，浏览器关闭时自动删除
+        //设置cookie过期时间。0，立即删除。负数，浏览器关闭时自动删除
+        cookie.setMaxAge(age);
         cookie.setHttpOnly(httpOnly);
         response.addCookie(cookie);
     }

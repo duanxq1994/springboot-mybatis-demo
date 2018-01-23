@@ -137,9 +137,8 @@ public class DateUtil extends DateUtils {
     /**
      * 判断指定日期是星期几
      *
-     * @param Date 要判断的日期
+     * @param date 要判断的日期
      * @return 返回数字[1:星期一，2：星期二，....，7：星期日]
-     * @throws ParseException
      */
     public static int getWeek(Date date) {
         Calendar c = Calendar.getInstance();
@@ -160,7 +159,7 @@ public class DateUtil extends DateUtils {
      * @return
      */
     public static boolean isIdDate(String date) {
-        return isDateFormat(date, "yyyyMMdd");
+        return isDateFormat(date, DateUtil.DATE_FORMAT_NO_DELIMITER);
     }
 
     /**
@@ -259,8 +258,8 @@ public class DateUtil extends DateUtils {
         long time1 = cal.getTimeInMillis();
         cal.setTime(endDate);
         long time2 = cal.getTimeInMillis();
-        long between_days = (time2 - time1) / (1000 * 3600 * 24);
-        return Integer.parseInt(String.valueOf(between_days));
+        long betweenDays = (time2 - time1) / (1000 * 3600 * 24);
+        return Integer.parseInt(String.valueOf(betweenDays));
     }
 
 
@@ -268,12 +267,12 @@ public class DateUtil extends DateUtils {
      * 根据类型参数返回不同的日期
      *
      * @param type <pre>
-     *                                                                                                                          today:当天
-     *                                                                                                                          yesterday：前一天
-     *                                                                                                                          less7：前6天 （近7天）
-     *                                                                                                                          less30：前29天 （近30天）
-     *                                                                                                                          all：前29年 （近30年）
-     *                                                                                                                         </pre>
+     *   today:当天
+     *   yesterday：前一天
+     *   less7：前6天 （近7天）
+     *   less30：前29天 （近30天）
+     *   all：前29年 （近30年）
+     *        </pre>
      * @return 返回yyyy-MM-dd格式字符串
      * @author zhouzc
      */
@@ -337,21 +336,6 @@ public class DateUtil extends DateUtils {
     }
 
     /**
-     * 根据还款计划生成时间获取最后一次还款日期
-     *
-     * @param refundPlanTime
-     * @return
-     */
-    public static String[] getY_M_DbyRefundPlanTime(Long refundPlanTime) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(refundPlanTime);
-        calendar.add(Calendar.YEAR, 1);
-        calendar.add(Calendar.MONTH, 1);
-        calendar.set(Calendar.DAY_OF_MONTH, 15);
-        return getYearAndMonthAndDay(calendar.getTime());
-    }
-
-    /**
      * 获取年月日，以数组返回
      *
      * @return
@@ -385,9 +369,6 @@ public class DateUtil extends DateUtils {
         cal.setTime(new Date());
         cal.add(Calendar.MONTH, -1);
         Date month = cal.getTime();
-        if (date.getTime() > month.getTime() && date.getTime() < (new Date()).getTime()) {
-            return true;
-        }
-        return false;
+        return date.getTime() > month.getTime() && date.getTime() < (new Date()).getTime();
     }
 }

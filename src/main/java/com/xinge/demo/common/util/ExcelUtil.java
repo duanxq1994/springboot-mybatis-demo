@@ -14,9 +14,8 @@ import jxl.write.WritableFont;
 import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
@@ -33,9 +32,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * excel操作
+ *
+ * @author duanxq
+ * @date 2018/01/23
+ */
+@Slf4j
 public class ExcelUtil {
-
-    private static final Log log = LogFactory.getLog(ExcelUtil.class);
 
     /**
      * 导入excle,兼容xls和xlsx俩种格式
@@ -57,7 +61,7 @@ public class ExcelUtil {
                     Row row = sheet.getRow(i);
                     // 非空行
                     if (row.getPhysicalNumberOfCells() > 0) {
-                        Map<String, String> map = new HashMap<>();
+                        Map<String, String> map = new HashMap<>(16);
                         for (int j = 0; j < titles.length; j++) {
                             Cell cell = row.getCell(j);
 
@@ -93,20 +97,23 @@ public class ExcelUtil {
             WritableWorkbook wbook = Workbook.createWorkbook(os);
 
             double maxSheetSize = 60000.0;
-            int sheetNum = 1;// 默认为1,防止list为空时导出空excel后台报异常
+            // 默认为1,防止list为空时导出空excel后台报异常
+            int sheetNum = 1;
             if (CollectionUtils.isNotEmpty(list)) {
                 sheetNum = (int) Math.ceil(list.size() / maxSheetSize);
             }
             for (int num = 0; num < sheetNum; num++) {
                 WritableSheet wsheet = wbook.createSheet(sheetName + "(" + (num + 1) + ")", num);
                 wsheet.getSettings().setShowGridLines(false);
-                wsheet.setColumnView(0, 2);// 设置第一列宽度
+                // 设置第一列宽度
+                wsheet.setColumnView(0, 2);
 
                 Set<String> set = headerMap.keySet();
                 String[] titles = set.toArray(new String[set.size()]);
 
                 for (int i = 0; i < titles.length; i++) {
-                    wsheet.setColumnView(i + 1, 20);// 设置列宽
+                    // 设置列宽
+                    wsheet.setColumnView(i + 1, 20);
                 }
                 // 循环写入表头内容
                 for (int i = 0; i < titles.length; i++) {
@@ -162,7 +169,7 @@ public class ExcelUtil {
                     if (colNum == titles.length) {
                         // 从第二行获取表格内容
                         for (int i = 1; i < rowNum; i++) {
-                            Map<String, String> map = new HashMap<String, String>();
+                            Map<String, String> map = new HashMap<>(16);
 
                             for (int j = 0; j < colNum; j++) {
                                 String key = titles[j];
@@ -205,11 +212,11 @@ public class ExcelUtil {
                         row = sheet.getRow(i);
                         int colNum = row.getPhysicalNumberOfCells();
                         if (colNum == titles.length) {
-                            Map<String, String> map = new HashMap<String, String>();
+                            Map<String, String> map = new HashMap<>(16);
 
                             for (int j = row.getFirstCellNum(); j < row.getPhysicalNumberOfCells(); j++) {
                                 String key = titles[j];
-                                String value = "";
+                                String value;
 
                                 if (Cell.CELL_TYPE_NUMERIC == row.getCell(j).getCellType()) {
                                     value = String.valueOf(new Double(row.getCell(j).getNumericCellValue()).intValue());
@@ -264,18 +271,6 @@ public class ExcelUtil {
             System.out.println("表体单元格样式设置失败！");
         }
         return bodyFormat;
-    }
-
-    public static void main(String[] a) {
-        File file = new File("e:\\11\\11.xlsx");
-        String[] titles = new String[]{"col1", "col2", "col3"};
-        List<Map<String, String>> list = ExcelUtil.importExcelXlsx(file, titles);
-        for (Map<String, String> map : list) {
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                System.out.println(entry.getKey());
-                System.out.println(entry.getValue());
-            }
-        }
     }
 
 }

@@ -7,8 +7,8 @@ import java.util.Date;
 /**
  * 与snowflake算法区别,返回字符串id,占用更多字节,但直观从id中看出生成时间
  *
- * @Project concurrency
- * Created by wgy on 16/7/19.
+ * @author wgy-pc
+ * @date 2016/7/19
  */
 public enum IdGenerator {
 
@@ -45,24 +45,34 @@ public enum IdGenerator {
     }
 
     private GenerateType generateType = GenerateType.SEC;
-    private long workerId;   //用ip地址最后几个字节标示
-    private long datacenterId = 0L; //可配置在properties中,启动时加载,此处默认先写成0
+    /** 用ip地址最后几个字节标示 */
+    private long workerId;
+    /** 可配置在properties中,启动时加载,此处默认先写成0 */
+    private long datacenterId = 0L;
     private long sequence = 0L;
-    private long workerIdBits = 8L; //节点ID长度
-    private long datacenterIdBits = 2L; //数据中心ID长度,可根据时间情况设定位数
-    private long sequenceBits = 12L; //序列号12位
-    private long workerIdShift = sequenceBits; //机器节点左移12位
-    private long datacenterIdShift = sequenceBits + workerIdBits; //数据中心节点左移14位
-    private long sequenceMask = -1L ^ (-1L << sequenceBits); //4095
+    /** 节点ID长度 */
+    private long workerIdBits = 8L;
+    /** 数据中心ID长度,可根据时间情况设定位数 */
+    private long datacenterIdBits = 2L;
+    /** 序列号12位，这里控制周期内可出现的id个数*/
+    private long sequenceBits = 12L;
+    /** 机器节点左移12位 */
+    private long workerIdShift = sequenceBits;
+    /** 数据中心节点左移14位 */
+    private long datacenterIdShift = sequenceBits + workerIdBits;
+    /** 4095 */
+    private long sequenceMask = ~(-1L << sequenceBits);
     private long lastTimestamp = -1L;
 
     IdGenerator() {
 //        workerId = 0x000000FF & getLastIP();
-        workerId = 0;//不考虑机器IP
+        //不考虑机器IP
+        workerId = 0;
     }
 
     public synchronized String nextId() {
-        long timestamp = timeGen(); //获取当前时间
+        //获取当前时间
+        long timestamp = timeGen();
         //如果服务器时间有问题(时钟后退) 报错。
         if (timestamp < lastTimestamp) {
             throw new RuntimeException(String.format(
@@ -74,10 +84,12 @@ public enum IdGenerator {
             sequence = (sequence + 1) & sequenceMask;
             //判断是否溢出,也就是每毫秒内超过4095，当为4096时，与sequenceMask相与，sequence就等于0
             if (sequence == 0) {
-                timestamp = tilNextMillis(lastTimestamp); //自旋等待到下一周期
+                //自旋等待到下一周期
+                timestamp = tilNextMillis(lastTimestamp);
             }
         } else {
-            sequence = 0L; //如果和上次生成时间不同,重置sequence，就是下一周期开始，sequence计数重新从0开始累加
+            //如果和上次生成时间不同,重置sequence，就是下一周期开始，sequence计数重新从0开始累加
+            sequence = 0L;
         }
         lastTimestamp = timestamp;
 

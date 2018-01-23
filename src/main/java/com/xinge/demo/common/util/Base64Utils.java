@@ -2,6 +2,9 @@ package com.xinge.demo.common.util;
 
 /**
  * 工具类，负责Base64编码的处理。
+ *
+ * @author duanxq
+ * @date 2018/01/23
  */
 public class Base64Utils {
     /**
@@ -49,20 +52,20 @@ public class Base64Utils {
     /**
      * Encode an array of bytes using Base64
      *
-     * @param data[] The bytes to be encoded
+     * @param data The bytes to be encoded
      * @return A valid Base64 representation of the input
      */
-    public static String encode(byte data[]) {
+    public static String encode(byte[] data) {
         return new Base64Utils().internalEncode(data);
     }
 
     /**
      * Encode an array of bytes using Base64
      *
-     * @param data[] The bytes to be encoded
+     * @param data The bytes to be encoded
      * @return A valid Base64 representation of the input
      */
-    public String internalEncode(byte data[]) {
+    public String internalEncode(byte[] data) {
         // Base64 encoding yields a String that is 33% longer than the byte array
         int charCount = ((data.length * 4) / 3) + 4;
 
@@ -128,7 +131,7 @@ public class Base64Utils {
             // Convert our two bytes to an int
             byteTriplet = convertUnsignedByteToInt(data[byteArrayIndex++]);
             byteTriplet <<= 8;
-            byteTriplet |= convertUnsignedByteToInt(data[byteArrayIndex++]);
+            byteTriplet |= convertUnsignedByteToInt(data[byteArrayIndex]);
             // Right pad the third 6 bit value with zeros
             byteTriplet <<= 2;
 
@@ -186,7 +189,7 @@ public class Base64Utils {
         // A Base64 byte array is 75% the size of its String representation
         int byteArrayLength = mUsefulLength * 3 / 4;
 
-        byte result[] = new byte[byteArrayLength];
+        byte[] result = new byte[byteArrayLength];
 
         int byteTriplet = 0;
         int byteIndex = 0;
@@ -325,7 +328,8 @@ public class Base64Utils {
      * left in the String.
      */
     private char getNextUsefulChar() {
-        char result = '_';  // Start with a non-Base64 character
+        // Start with a non-Base64 character
+        char result = '_';
         while (!isUsefulChar(result)) {
             result = mString.charAt(mIndex++);
         }
@@ -355,7 +359,7 @@ public class Base64Utils {
         System.out.println("Text = [" + tString + "]");
         String tEncoded = Base64Utils.encode(tString.getBytes());
         System.out.println("Encoded = [" + tEncoded + "]");
-        byte tDecoded[] = Base64Utils.decode(tEncoded);
+        byte[] tDecoded = Base64Utils.decode(tEncoded);
         System.out.println("Decoded = [" + new String(tDecoded) + "]");
     }
 }

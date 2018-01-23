@@ -1,9 +1,10 @@
 package com.xinge.demo.common.util;
 
 /**
- * created by duanxq on 2017/11/13
+ * 身份证号正确性校验
  *
  * @author duanxq
+ * @date 2017/11/13
  */
 public class IDCardValidate {
 
@@ -23,13 +24,6 @@ public class IDCardValidate {
         }
         // 判断随机码是否相等
         return random[total % 11] == no.charAt(17);
-    }
-
-    public static void main(String[] args) {
-        // 正确
-        System.out.println(validate("432831196411150810"));
-        // 错误
-        System.out.println(validate("432831196411150813"));
     }
 
 }

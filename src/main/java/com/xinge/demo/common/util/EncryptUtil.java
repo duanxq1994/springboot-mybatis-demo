@@ -25,16 +25,16 @@ import java.security.MessageDigest;
  */
 public class EncryptUtil {
     private static final Logger logger = LoggerFactory.getLogger(EncryptUtil.class);
-    private static final char hexDigits[] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
+    private static final char[] HEX_DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
             'e', 'f'};
-    private static final byte IV[] = {0x12, 0x34, 0x56, 0x78, -0x12, -0x34, -0x56, -0x78, 0x12, 0x34, 0x56,
+    private static final byte[] IV = {0x12, 0x34, 0x56, 0x78, -0x12, -0x34, -0x56, -0x78, 0x12, 0x34, 0x56,
             0x78, -0x56, -0x78, 0x12, 0x34};
 
     /**
      * 加密字段内容
      *
-     * @param 所属字段名称
-     * @param 需要加密的内容
+     * @param key 所属字段名称
+     * @param value 需要加密的内容
      * @return 加密后的字符串
      */
     public static String encryptValue(String key, String value) {
@@ -58,8 +58,8 @@ public class EncryptUtil {
     /**
      * 解密字段内容
      *
-     * @param 所属字段名称
-     * @param 需要解密的内容
+     * @param key 所属字段名称
+     * @param value 需要解密的内容
      * @return 解密后的原文
      */
     public static String decryptValue(String key, String value) {
@@ -114,12 +114,11 @@ public class EncryptUtil {
             md5.update(value.getBytes("utf-8"));
             byte[] encodedRaw = md5.digest();
             int j = encodedRaw.length;
-            char str[] = new char[j * 2];
+            char[] str = new char[j * 2];
             int k = 0;
-            for (int i = 0; i < j; i++) {
-                byte byte0 = encodedRaw[i];
-                str[k++] = hexDigits[byte0 >>> 4 & 0xf];
-                str[k++] = hexDigits[byte0 & 0xf];
+            for (byte byte0 : encodedRaw) {
+                str[k++] = HEX_DIGITS[byte0 >>> 4 & 0xf];
+                str[k++] = HEX_DIGITS[byte0 & 0xf];
             }
             return new String(str);
         } catch (Exception e) {
@@ -141,12 +140,11 @@ public class EncryptUtil {
             md5.update(bytes);
             byte[] encodedRaw = md5.digest();
             int j = encodedRaw.length;
-            char str[] = new char[j * 2];
+            char[] str = new char[j * 2];
             int k = 0;
-            for (int i = 0; i < j; i++) {
-                byte byte0 = encodedRaw[i];
-                str[k++] = hexDigits[byte0 >>> 4 & 0xf];
-                str[k++] = hexDigits[byte0 & 0xf];
+            for (byte byte0 : encodedRaw) {
+                str[k++] = HEX_DIGITS[byte0 >>> 4 & 0xf];
+                str[k++] = HEX_DIGITS[byte0 & 0xf];
             }
             return new String(str);
         } catch (Exception e) {
@@ -212,18 +210,15 @@ public class EncryptUtil {
             String algorithm = "DESede";
             byte[] bytePassword = password.getBytes();
             //生成密钥
-            byte[] tripleDESKey = new byte[24];
-            int k = 0;
-            int i = 0;
+            int keyLength = 24;
+            byte[] tripleDESKey = new byte[keyLength];
             //初始化Key
-            for (i = 0; i < 24; i++) {
-                if (k >= bytePassword.length) {
-                    tripleDESKey[i] = 0;
-                } else
-                    tripleDESKey[i] = bytePassword[k];
-                k++;
+            for (int i = 0; i < bytePassword.length; i++) {
+                if (i >= keyLength) {
+                    break;
+                }
+                tripleDESKey[i] = bytePassword[i];
             }
-            //System.out.println("key = "+ new String(tripleDESKey,"UTF-8"));
             SecretKey deskey = new SecretKeySpec(tripleDESKey, algorithm);
 
             //加密
@@ -242,20 +237,16 @@ public class EncryptUtil {
             String algorithm = "DESede";
             byte[] bytePassword = password.getBytes();
             //生成密钥
+            int keyLength = 24;
             byte[] tripleDESKey = new byte[24];
-            int k = 0;
-            int i = 0;
             //初始化Key
-            for (i = 0; i < 24; i++) {
-                if (k >= bytePassword.length) {
-                    tripleDESKey[i] = 0;
-                } else
-                    tripleDESKey[i] = bytePassword[k];
-                k++;
+            for (int i = 0; i < bytePassword.length; i++) {
+                if (i >= keyLength) {
+                    break;
+                }
+                tripleDESKey[i] = bytePassword[i];
             }
             SecretKey deskey = new SecretKeySpec(tripleDESKey, algorithm);
-
-
             Cipher cipher = Cipher.getInstance("DESede/ECB/PKCS5Padding");
             cipher.init(Cipher.DECRYPT_MODE, deskey);
             byte[] retByte = cipher.doFinal(datasource);

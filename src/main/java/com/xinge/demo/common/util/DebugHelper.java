@@ -9,6 +9,8 @@ import java.util.Map;
 
 /**
  * 日志打印前过滤敏感信息
+ * @author duanxq
+ * @date 2018/01/23
  */
 public class DebugHelper {
 
@@ -17,8 +19,7 @@ public class DebugHelper {
         if (map == null) {
             return null;
         }
-        Map filteredMap = new HashMap();
-        filteredMap.putAll(map);
+        Map filteredMap = new HashMap(map);
 
         // 如果map中有字符串数组，需要自己拼接成字符串
         java.util.Set keySet = filteredMap.keySet();
@@ -57,20 +58,20 @@ public class DebugHelper {
         if (filteredMap.get("cardNo") != null) {
             // bank_account可能传一个ArrayList，直接使用String强转会报错
             Object obj = filteredMap.get("cardNo");
-            String encryptedBankNo = "";
+            StringBuilder encryptedBankNo = new StringBuilder();
             if (obj instanceof List) {
                 List tmpList = (List) obj;
-                for (int i = 0; i < tmpList.size(); i++) {
-                    encryptedBankNo += encryptBankAccount(String.valueOf(tmpList.get(i))) + ",";
+                for (Object aTmpList : tmpList) {
+                    encryptedBankNo.append(encryptBankAccount(String.valueOf(aTmpList))).append(",");
                 }
-                if (encryptedBankNo.endsWith(",")) {
-                    encryptedBankNo = encryptedBankNo.substring(0, encryptedBankNo.length() - 1);
+                if (encryptedBankNo.toString().endsWith(",")) {
+                    encryptedBankNo = new StringBuilder(encryptedBankNo.substring(0, encryptedBankNo.length() - 1));
                 }
-                encryptedBankNo = "[" + encryptedBankNo + "]";
+                encryptedBankNo = new StringBuilder("[" + encryptedBankNo + "]");
             } else {
-                encryptedBankNo = encryptBankAccount(String.valueOf(obj));
+                encryptedBankNo = new StringBuilder(encryptBankAccount(String.valueOf(obj)));
             }
-            filteredMap.put("cardNo", encryptedBankNo);
+            filteredMap.put("cardNo", encryptedBankNo.toString());
         }
 
         // 地址
@@ -101,21 +102,21 @@ public class DebugHelper {
     /**
      * 加密身份证号
      *
-     * @param id
+     * @param idNo
      * @return
      */
-    public static String encryptIdNo(String id_no) {
-        return replace(id_no, '*', 6, 2);
+    public static String encryptIdNo(String idNo) {
+        return replace(idNo, '*', 6, 2);
     }
 
     /**
      * 加密手机号码
      *
-     * @param mobile_tel
+     * @param mobileTel
      * @return
      */
-    public static String encryptMobileTel(String mobile_tel) {
-        return replace(mobile_tel, '*', 3, 4);
+    public static String encryptMobileTel(String mobileTel) {
+        return replace(mobileTel, '*', 3, 4);
     }
 
     /**
@@ -131,21 +132,21 @@ public class DebugHelper {
     /**
      * 加密姓名
      *
-     * @param client_name
+     * @param clientName
      * @return
      */
-    public static String encryptClientName(String client_name) {
-        return replace(client_name, '*', 0, 1);
+    public static String encryptClientName(String clientName) {
+        return replace(clientName, '*', 0, 1);
     }
 
     /**
      * 加密银行账号
      *
-     * @param bank_account
+     * @param bankAccount
      * @return
      */
-    public static String encryptBankAccount(String bank_account) {
-        return replace(bank_account, '*', 4, 4);
+    public static String encryptBankAccount(String bankAccount) {
+        return replace(bankAccount, '*', 4, 4);
     }
 
     /**
