@@ -287,6 +287,7 @@ public class HttpClientUtil {
      * @param obj
      * @return
      */
+    @SuppressWarnings({"unchecked"})
     private HttpEntity buildHttpEntry(Object obj) {
         EntityBuilder builder = EntityBuilder.create();
         builder.setContentEncoding(this.charset.name());
