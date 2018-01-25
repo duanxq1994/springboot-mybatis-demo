@@ -79,10 +79,11 @@ public abstract class BaseService<T> {
 
     /**
      * 根据条件查询单条数据
-     *
+     * @deprecated 查询出多条会抛出异常，应根据业务，编写单独的查询方法
      * @param obj
      * @return
      */
+    @Deprecated
     public T queryForObject(T obj) {
         return mapper.selectOne(obj);
     }
