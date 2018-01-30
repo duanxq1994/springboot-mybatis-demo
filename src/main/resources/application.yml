@@ -32,15 +32,6 @@ spring:
     http:
           multipart:
             max-file-size: 20MB
-    task:
-      pool:
-        corePoolSize: 10
-        queueCapacity: 50
-        maxPoolSize: 100
-        keepAliveSeconds: 300
-    mvc:
-      throw-exception-if-no-handler-found: true
-
 
 
 mybatis:
