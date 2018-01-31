@@ -1,10 +1,7 @@
 package com.xinge.demo.web.config;
 
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -14,23 +11,21 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
 /**
- * Created by duanxq on 2017/9/21
+ * 自定义线程池
+ *
  * @author duanxq
  */
 @Slf4j
 @Configuration
-public class AsyncTaskExecutePool implements AsyncConfigurer {
-
-    @Autowired
-    private TaskThreadPoolConfig config;
+public class CusThreadPoolTaskExecutor implements AsyncConfigurer {
 
     @Override
     public Executor getAsyncExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
-        executor.setCorePoolSize(config.getCorePoolSize());
-        executor.setMaxPoolSize(config.getMaxPoolSize());
-        executor.setQueueCapacity(config.getQueueCapacity());
-        executor.setKeepAliveSeconds(config.getKeepAliveSeconds());
+        executor.setCorePoolSize(10);
+        executor.setMaxPoolSize(100);
+        executor.setQueueCapacity(50);
+        executor.setKeepAliveSeconds(300);
         executor.setThreadNamePrefix("taskExecutor-");
 
         // rejection-policy：当pool已经达到max size的时候，如何处理新任务
