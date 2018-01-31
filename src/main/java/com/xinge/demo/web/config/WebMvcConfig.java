@@ -9,10 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 import java.util.List;
 
@@ -23,12 +21,6 @@ import java.util.List;
  */
 @Configuration
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
-
-    @Override
-    public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
-        configurer.setTaskExecutor(new CustomThreadPoolTaskExecutor());
-        super.configureAsyncSupport(configurer);
-    }
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
