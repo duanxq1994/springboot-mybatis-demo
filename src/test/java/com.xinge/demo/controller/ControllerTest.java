@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @date 2018/1/31
  */
 @RestController
-public class TestController {
+public class ControllerTest {
 
     @Autowired
     private BankService bankService;
