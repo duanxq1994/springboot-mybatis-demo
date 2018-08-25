@@ -8,9 +8,15 @@ package com.xinge.demo.common.constant;
  */
 public class TypeConstant {
 
+    private TypeConstant() {
+
+    }
+
     /**
      * 商品类型 1：商城 2：保险
      */
-    public static final Byte TRADE_TYPE_MALL = 1, TRADE_TYPE_INSURANCE = 2;
+    public static final Byte TRADE_TYPE_MALL = 1;
+    public static final Byte TRADE_TYPE_INSURANCE = 2;
+
 
 }

@@ -8,6 +8,10 @@ package com.xinge.demo.common.constant;
  */
 public class StringConstant {
 
+    private StringConstant() {
+
+    }
+
     public static final String COOKIE_COMPANY_ID = "COMPANY_ID";
 
     public static final String COOKIE_EMPLOYEE_ID = "EMPLOYEE_ID";

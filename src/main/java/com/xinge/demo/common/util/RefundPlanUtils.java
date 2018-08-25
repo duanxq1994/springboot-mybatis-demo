@@ -64,8 +64,10 @@ public class RefundPlanUtils {
 
 
     public static class RepaymentPlanDetail {
-
-        private String date;//格式 yyyy-MM-dd
+        /**
+         * 格式 yyyy-MM-dd
+         */
+        private String date;
         private String amount;
 
         public String getDate() {
@@ -94,16 +96,19 @@ public class RefundPlanUtils {
      */
     public static List<RepaymentPlanDetail> generateRepaymentPlanList(Long staTime, Long totalAmount, Integer repayTotalTimes, Integer refundDay) {
         List<RepaymentPlanDetail> resultList = new ArrayList<>();
-        Long rest = totalAmount % (100 * repayTotalTimes);//求出余数
+        //求出余数
+        Long rest = totalAmount % (100 * repayTotalTimes);
         Long amount = (totalAmount - rest) / repayTotalTimes;
         for (int a = 1; a <= repayTotalTimes; a++) {
             Calendar c = Calendar.getInstance();
             c.setTimeInMillis(staTime);
             c.add(Calendar.MONTH, a);
-            c.set(Calendar.DAY_OF_MONTH, refundDay);//还款日
+            //还款日
+            c.set(Calendar.DAY_OF_MONTH, refundDay);
             String date = DateUtil.format(c.getTime(), DateUtil.DATE_FORMAT);
             if (a == repayTotalTimes) {
-                amount += rest;//如果除不尽，将余数加在最后一期
+                //如果除不尽，将余数加在最后一期
+                amount += rest;
             }
             RepaymentPlanDetail detail = new RepaymentPlanDetail();
             detail.setDate(date);
@@ -114,7 +119,7 @@ public class RefundPlanUtils {
     }
 
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         String plan = RefundPlanUtils.createRefundPlan(System.currentTimeMillis(), 5000D, 12, 15);
         System.out.println(plan);
         String plan1 = RefundPlanUtils.createRefundPlan(System.currentTimeMillis(), 501234L, 12, 15);
@@ -123,8 +128,10 @@ public class RefundPlanUtils {
         double b = 0.29 * 100;
         double c = 0.29 * 10 * 10;
         System.out.println("b:" + b);
-        System.out.println(String.format("%f", b));//格式化，显示9位有效数字，且会进行四舍五入
-        System.out.println(String.format("%.2f", 28.999));//格式化，精确到小数点后两位，且会进行四舍五入
+        //格式化，显示9位有效数字，且会进行四舍五入
+        System.out.println(String.format("%f", b));
+        //格式化，精确到小数点后两位，且会进行四舍五入
+        System.out.println(String.format("%.2f", 28.999));
         System.out.println("c:" + c);
 
 

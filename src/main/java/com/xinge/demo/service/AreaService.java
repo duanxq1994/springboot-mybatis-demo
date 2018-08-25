@@ -22,9 +22,6 @@ public class AreaService {
     @Autowired
     private AreaMapper areaMapper;
 
-
-    private Logger logger = LoggerFactory.getLogger(getClass());
-
     /**
      * 获取省份列表
      *

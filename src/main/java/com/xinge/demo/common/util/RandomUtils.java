@@ -6,9 +6,9 @@ import java.util.Random;
  * 随机数、随即字符串工具
  */
 public class RandomUtils {
-    private static final String allChar = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final String letterChar = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    private static final String numberChar = "0123456789";
+    private static final String ALL_CHAR = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String LETTER_CHAR = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String NUMBER_CHAR = "0123456789";
 
     /**
      * 返回一个定长的随机字符串(只包含大小写字母、数字)
@@ -17,10 +17,10 @@ public class RandomUtils {
      * @return 随机字符串
      */
     public static String generateString(int length) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < length; i++) {
-            sb.append(allChar.charAt(random.nextInt(allChar.length())));
+            sb.append(ALL_CHAR.charAt(random.nextInt(ALL_CHAR.length())));
         }
         return sb.toString();
     }
@@ -32,10 +32,10 @@ public class RandomUtils {
      * @return 随机字符串
      */
     public static String generateNumber(int length) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < length; i++) {
-            sb.append(numberChar.charAt(random.nextInt(numberChar.length())));
+            sb.append(NUMBER_CHAR.charAt(random.nextInt(NUMBER_CHAR.length())));
         }
         return sb.toString();
     }
@@ -47,10 +47,10 @@ public class RandomUtils {
      * @return 随机字符串
      */
     public static String generateMixString(int length) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         Random random = new Random();
         for (int i = 0; i < length; i++) {
-            sb.append(letterChar.charAt(random.nextInt(letterChar.length())));
+            sb.append(LETTER_CHAR.charAt(random.nextInt(LETTER_CHAR.length())));
         }
         return sb.toString();
     }
@@ -82,7 +82,7 @@ public class RandomUtils {
      * @return 纯0字符串
      */
     public static String generateZeroString(int length) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < length; i++) {
             sb.append('0');
         }
@@ -97,7 +97,7 @@ public class RandomUtils {
      * @return 定长的字符串
      */
     public static String toFixdLengthString(long num, int fixdlenth) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         String strNum = String.valueOf(num);
         if (fixdlenth - strNum.length() >= 0) {
             sb.append(generateZeroString(fixdlenth - strNum.length()));
@@ -116,7 +116,7 @@ public class RandomUtils {
      * @return 定长的字符串
      */
     public static String toFixdLengthString(int num, int fixdlenth) {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         String strNum = String.valueOf(num);
         if (fixdlenth - strNum.length() >= 0) {
             sb.append(generateZeroString(fixdlenth - strNum.length()));

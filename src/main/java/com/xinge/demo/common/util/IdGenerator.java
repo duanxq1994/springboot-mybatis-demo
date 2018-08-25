@@ -1,5 +1,7 @@
 package com.xinge.demo.common.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -10,6 +12,7 @@ import java.util.Date;
  * @author wgy-pc
  * @date 2016/7/19
  */
+@Slf4j
 public enum IdGenerator {
 
 
@@ -23,7 +26,7 @@ public enum IdGenerator {
         HOUR(1000 * 60 * 60, "yyyyMMddHH"),
         MIN(1000 * 60, "yyyyMMddHHmm"),
         SEC(1000, "yyyyMMddHHmmss"),
-        Mil(1, "yyyyMMddHHmmssSSS"),;
+        MIL(1, "yyyyMMddHHmmssSSS"),;
 
         private long fixTime;
 
@@ -122,7 +125,7 @@ public enum IdGenerator {
             byte[] ipByte = ip.getAddress();
             lastip = ipByte[ipByte.length - 1];
         } catch (UnknownHostException e) {
-            e.printStackTrace();
+            log.error("", e);
         }
         return lastip;
     }

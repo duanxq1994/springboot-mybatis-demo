@@ -2,7 +2,6 @@ package com.xinge.demo.web.controller;
 
 
 import com.xinge.demo.model.domain.AreaDO;
-import com.xinge.demo.model.entity.BatchResultDTO;
 import com.xinge.demo.model.entity.ResultEntity;
 import com.xinge.demo.service.AreaService;
 import org.apache.commons.lang.StringUtils;
@@ -17,8 +16,8 @@ import java.util.List;
 
 /**
  * @author shanyiliang
- *         地区信息接口
- *         created by shanyiliang on 2017/9/12
+ * 地区信息接口
+ * created by shanyiliang on 2017/9/12
  */
 @RestController
 @RequestMapping(value = "common/area", method = RequestMethod.POST)
@@ -47,15 +46,11 @@ public class AreaController {
      */
     @RequestMapping("subList.json")
     public Object areaList(String areaCode) {
-
         ResultEntity result = new ResultEntity(ResultEntity.ERROR);
         if (StringUtils.isNotBlank(areaCode)) {
             result.setList(areaService.getSubAreaList(areaCode));
             result.setCode(ResultEntity.SUCCESS);
-        } else {
-            areaCode = null;
         }
-
         return result;
     }
 

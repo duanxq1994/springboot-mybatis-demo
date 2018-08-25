@@ -8,6 +8,10 @@ package com.xinge.demo.common.util;
  */
 public class IDCardValidate {
 
+    private IDCardValidate() {
+
+    }
+
     public static boolean validate(String no) {
         // 对身份证号进行长度等简单判断
         if (no == null || no.length() != 18 || !no.matches("\\d{17}[0-9X]")) {

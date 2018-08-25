@@ -6,6 +6,7 @@
 package com.xinge.demo.common.util;
 
 
+import lombok.extern.slf4j.Slf4j;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JsonConfig;
@@ -21,12 +22,17 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author zyb since 2011-4-11
+ *
  */
+@Slf4j
 public class JsonUtil {
 
+    private JsonUtil() {
+
+    }
+
     /**
-     * <b>概要：</b> ·根据java POJO对象获得相应的json字符串 <b>作者：</b>suxh </br> <b>日期：</b>2015-1-28 </br>
+     * 根据java POJO对象获得相应的json字符串
      *
      * @param javaObj    需要转换层json字符串的对象
      * @param dataFormat 日期转换格式
@@ -40,7 +46,7 @@ public class JsonUtil {
     }
 
     /**
-     * <b>概要：</b> 获得json配置（配置一系列转换的工具类） Utility class that helps configuring the serialization process. <b>作者：</b>suxh </br> <b>日期：</b>2015-1-28 </br>
+     * <b>概要：</b> 获得json配置（配置一系列转换的工具类） Utility class that helps configuring the serialization process.
      *
      * @param datePattern 日期格式，用于日期转换为json格式数据
      * @return jsonConfi对象
@@ -179,17 +185,19 @@ public class JsonUtil {
         try {
             props = Introspector.getBeanInfo(bean.getClass(), Object.class).getPropertyDescriptors();
         } catch (IntrospectionException e) {
+            log.error("", e);
         }
         if (props != null) {
-            for (int i = 0; i < props.length; i++) {
+            for (PropertyDescriptor prop : props) {
                 try {
-                    String name = objectToJson(props[i].getName());
-                    String value = objectToJson(props[i].getReadMethod().invoke(bean));
+                    String name = objectToJson(prop.getName());
+                    String value = objectToJson(prop.getReadMethod().invoke(bean));
                     json.append(name);
                     json.append(":");
                     json.append(value);
                     json.append(",");
                 } catch (Exception e) {
+                    log.error("", e);
                 }
             }
             json.setCharAt(json.length() - 1, '}');
@@ -206,7 +214,7 @@ public class JsonUtil {
     public static String listToJson(List<?> list) {
         StringBuilder json = new StringBuilder();
         json.append("[");
-        if (list != null && list.size() > 0) {
+        if (list != null && !list.isEmpty()) {
             for (Object obj : list) {
                 json.append(objectToJson(obj));
                 json.append(",");
@@ -245,10 +253,10 @@ public class JsonUtil {
         StringBuilder json = new StringBuilder();
         json.append("{");
         if (map != null && map.size() > 0) {
-            for (Object key : map.keySet()) {
-                json.append(objectToJson(key));
+            for (Map.Entry entry : map.entrySet()) {
+                json.append(objectToJson(entry.getKey()));
                 json.append(":");
-                json.append(objectToJson(map.get(key)));
+                json.append(objectToJson(entry.getValue()));
                 json.append(",");
             }
             json.setCharAt(json.length() - 1, '}');
@@ -265,7 +273,7 @@ public class JsonUtil {
     public static String setToJson(Set<?> set) {
         StringBuilder json = new StringBuilder();
         json.append("[");
-        if (set != null && set.size() > 0) {
+        if (set != null && !set.isEmpty()) {
             for (Object obj : set) {
                 json.append(objectToJson(obj));
                 json.append(",");

@@ -24,7 +24,7 @@ public class Valicode {
         g.setColor(Color.white);
         g.fillRect(0, 0, 74, 30);
         for (int i = 0; i < 100; i++) {
-            int x = (int) Math.round((Math.random() * 74));
+            int x = (int) Math.round(Math.random() * 74);
             int y = (int) Math.round((Math.random() * 30));
             Color color = new Color((float) (Math.random() * 0.7) + 0.3F, (float) (Math.random() * 0.7) + 0.3F,
                     (float) (Math.random() * 0.7) + 0.3F);

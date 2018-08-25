@@ -15,6 +15,10 @@ import java.security.NoSuchAlgorithmException;
 @Slf4j
 public class Md5Util {
 
+    private Md5Util() {
+
+    }
+
     private static MessageDigest messagedigest = null;
 
     static {

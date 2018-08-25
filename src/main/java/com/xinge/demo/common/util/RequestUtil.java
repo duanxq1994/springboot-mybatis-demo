@@ -1,5 +1,6 @@
 package com.xinge.demo.common.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -11,8 +12,17 @@ import java.util.Map;
 
 /**
  * request请求处理工具类
+ *
+ * @author duanx
  */
+@Slf4j
 public class RequestUtil {
+
+    private RequestUtil() {
+
+    }
+
+    private static final String STR_UNKNOWN = "unknown";
 
     /**
      * 静态取request，本地junit非容器运行时无法使用，服务未启动完成无法使用
@@ -26,7 +36,7 @@ public class RequestUtil {
                 return attr.getRequest();
             }
         } catch (Exception e) {
-
+            log.error("", e);
         }
         return null;
     }
@@ -89,13 +99,13 @@ public class RequestUtil {
     public static String getIpAddress(HttpServletRequest request) {
         String ip = request.getHeader("x-forwarded-for");
 
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || STR_UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || STR_UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.length() == 0 || STR_UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
 
@@ -108,7 +118,7 @@ public class RequestUtil {
      * @category 获取request参数
      */
     public static Map<String, String> request2Map(HttpServletRequest request) {
-        Map<String, String> map = new HashMap<String, String>();
+        Map<String, String> map = new HashMap<>();
         Enumeration<String> enums = request.getParameterNames();
         while (enums.hasMoreElements()) {
             String name = enums.nextElement();

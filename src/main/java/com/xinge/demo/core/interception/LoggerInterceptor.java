@@ -24,9 +24,9 @@ import java.util.Map;
  */
 public class LoggerInterceptor extends HandlerInterceptorAdapter {
 
-    private final static Logger logger = LoggerFactory.getLogger(LoggerInterceptor.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoggerInterceptor.class);
 
-    private final static int REQUEST_PARAM_SIZE = 2000;
+    private static final int REQUEST_PARAM_SIZE = 2000;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
@@ -42,8 +42,8 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
     }
 
     @Override
-    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
-
+    public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView){
+        //
     }
 
     @Override
@@ -65,7 +65,8 @@ public class LoggerInterceptor extends HandlerInterceptorAdapter {
                 if (resultMap.getList() != null) {
                     resultMap.put("list", "size:" + resultMap.getList().size());
                 }
-                if ((debugParam = resultMap.toString()).length() > REQUEST_PARAM_SIZE) {
+                debugParam = resultMap.toString();
+                if (debugParam.length() > REQUEST_PARAM_SIZE) {
                     debugParam = debugParam.substring(0, REQUEST_PARAM_SIZE) + "......";
                 }
             }

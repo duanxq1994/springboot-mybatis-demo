@@ -1,6 +1,7 @@
 package com.xinge.demo.common.util;
 
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
@@ -12,7 +13,12 @@ import java.util.Map;
 /**
  * Created by duanxq on 2016/11/14.
  */
+@Slf4j
 public class MapUtil {
+
+    private MapUtil() {
+
+    }
 
     /**
      * 将javabean实体类转为map类型，然后返回一个map类型的值
@@ -33,7 +39,7 @@ public class MapUtil {
             params = BeanUtils.describe(obj);
             params.remove("class");
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("", e);
         }
         return params;
     }
@@ -58,7 +64,7 @@ public class MapUtil {
             bean = clazz.newInstance();
             BeanUtils.populate(bean, map);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("", e);
         }
         return bean;
     }

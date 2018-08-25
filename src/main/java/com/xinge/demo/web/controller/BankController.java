@@ -3,8 +3,7 @@ package com.xinge.demo.web.controller;
 import com.xinge.demo.mapper.BankMapper;
 import com.xinge.demo.model.entity.ResultEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -25,7 +24,7 @@ public class BankController {
      * @return
      */
     @ResponseBody
-    @RequestMapping(value = "bankList.json", method = RequestMethod.POST)
+    @PostMapping(value = "bankList.json")
     public Object bankList() {
         ResultEntity result = new ResultEntity(ResultEntity.ERROR);
         result.setList(bankMapper.selectAll());

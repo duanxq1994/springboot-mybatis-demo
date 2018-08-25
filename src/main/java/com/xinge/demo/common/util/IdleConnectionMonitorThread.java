@@ -35,6 +35,7 @@ public class IdleConnectionMonitorThread extends Thread {
             }
         } catch (InterruptedException e) {
             log.error("", e);
+            Thread.currentThread().interrupt();
         }
     }
 
