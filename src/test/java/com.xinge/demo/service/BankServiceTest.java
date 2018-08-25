@@ -2,6 +2,7 @@ package com.xinge.demo.service;
 
 import com.xinge.demo.Application;
 import com.xinge.demo.model.domain.BankDO;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,7 @@ public class BankServiceTest {
     private BankService bankService;
 
     @Test
+    @Ignore
     public void queryByBankName() {
         BankDO bankDO = bankService.queryByBankName("工商银行");
         assertEquals(bankDO.getName(),"工商银行");

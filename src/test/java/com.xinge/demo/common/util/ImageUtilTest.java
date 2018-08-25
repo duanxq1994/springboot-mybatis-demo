@@ -1,6 +1,7 @@
 package com.xinge.demo.common.util;
 
 import net.coobird.thumbnailator.Thumbnails;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.File;
@@ -16,6 +17,7 @@ import static org.junit.Assert.*;
 public class ImageUtilTest {
 
     @Test
+    @Ignore
     public void compress() throws IOException {
         String filePath = "C:\\Users\\jiexing-pc\\Desktop\\257413513315139977.jpg";
         String fileOutPath = "C:\\Users\\jiexing-pc\\Desktop\\1.jpg";
