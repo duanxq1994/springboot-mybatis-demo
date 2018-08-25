@@ -69,20 +69,16 @@ public class HttpClientUtil {
     }
 
 
-    public static HttpClientUtil getInstance() {
+    public static synchronized HttpClientUtil getInstance() {
         if (instance == null) {
-            synchronized (HttpClientUtil.class) {
-                if (instance == null) {
-                    // 设置连接管理器
-                    PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
-                    connManager.setMaxTotal(200);
-                    connManager.setDefaultMaxPerRoute(20);
-                    IdleConnectionMonitorThread idleConnectionMonitorThread = new IdleConnectionMonitorThread(connManager);
-                    idleConnectionMonitorThread.start();
-                    instance = new HttpClientUtil();
-                    instance.httpClientBuilder = HttpClients.custom().setConnectionManager(connManager);
-                }
-            }
+            // 设置连接管理器
+            PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
+            connManager.setMaxTotal(200);
+            connManager.setDefaultMaxPerRoute(20);
+            IdleConnectionMonitorThread idleConnectionMonitorThread = new IdleConnectionMonitorThread(connManager);
+            idleConnectionMonitorThread.start();
+            instance = new HttpClientUtil();
+            instance.httpClientBuilder = HttpClients.custom().setConnectionManager(connManager);
         }
         return instance;
     }
@@ -333,7 +329,7 @@ public class HttpClientUtil {
      * @throws ClientProtocolException
      * @throws IOException
      */
-    public byte[] httpPost(String url, byte[] binary, List<Header> headers) throws ClientProtocolException, IOException {
+    public byte[] httpPost(String url, byte[] binary, List<Header> headers) throws IOException {
         HttpPost httppost = new HttpPost(url);
         this.setContentType(ContentType.APPLICATION_OCTET_STREAM.withCharset(charset));
         HttpEntity reqEntity = buildHttpEntry(binary);
@@ -429,7 +425,7 @@ public class HttpClientUtil {
      * @throws ClientProtocolException
      */
     private byte[] execute(HttpRequestBase request, List<Header> headers) throws IOException {
-        if (headers != null && headers.size() > 0) {
+        if (headers != null && !headers.isEmpty()) {
             // 添加请求头
             for (Header header : headers) {
                 request.addHeader(header);
@@ -462,7 +458,7 @@ public class HttpClientUtil {
                 return data;
             } else {
                 String dataStr = data == null ? "网络请求发生异常:" + response.getStatusLine() + " URI=" + request.getURI() : new String(data, StandardCharsets.UTF_8);
-                logger.warn("网络请求发生异常:" + dataStr);
+                logger.warn("网络请求发生异常:{}", dataStr);
                 throw new RuntimeException("网络请求发生异常:" + response.getStatusLine());
             }
         } finally {

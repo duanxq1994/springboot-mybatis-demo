@@ -11,6 +11,10 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class CookieUtil {
 
+    private CookieUtil() {
+
+    }
+
     /**
      * 设置cookie过期时间，默认一年
      */
@@ -113,13 +117,6 @@ public class CookieUtil {
         cookies.setPath("/");
         cookies.setMaxAge(0);
         response.addCookie(cookies);
-    }
-
-    public static void main(String[] args) {
-//      CookieUtil util=new CookieUtil(request,response,-1);
-//      util.addCookie("name","value");
-//      String value=util.getCookieValue("name");
-//      System.out.println("value="+value);
     }
 
 }

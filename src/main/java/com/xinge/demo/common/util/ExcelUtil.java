@@ -41,6 +41,10 @@ import java.util.Set;
 @Slf4j
 public class ExcelUtil {
 
+    private ExcelUtil() {
+
+    }
+
     /**
      * 导入excle,兼容xls和xlsx俩种格式
      *
@@ -52,11 +56,14 @@ public class ExcelUtil {
         List<Map<String, String>> res = new ArrayList<>();
         try {
             if (null != file && file.exists()) {
-                org.apache.poi.ss.usermodel.Workbook book = WorkbookFactory.create(file);
-                org.apache.poi.ss.usermodel.Sheet sheet = book.getSheetAt(sheetIndex);
+                org.apache.poi.ss.usermodel.Sheet sheet;
+                int rowNum;
+                try (org.apache.poi.ss.usermodel.Workbook book = WorkbookFactory.create(file)) {
+                    sheet = book.getSheetAt(sheetIndex);
+                }
 
                 // 获取列数、行数
-                int rowNum = sheet.getLastRowNum();
+                rowNum = sheet.getLastRowNum();
                 for (int i = 1; i < rowNum + 1; i++) {
                     Row row = sheet.getRow(i);
                     // 非空行
@@ -80,7 +87,6 @@ public class ExcelUtil {
             }
         } catch (Exception e) {
             log.info("excel导入数据出错.", e);
-            e.printStackTrace();
         }
         return res;
     }
@@ -135,13 +141,10 @@ public class ExcelUtil {
                     }
                 }
             }
-
             wbook.write();
             wbook.close();
             os.flush();
             os.close();
-            os = null;
-
         } catch (Exception e) {
             log.info("exception heppended in " + ExcelUtil.class + " cause: ", e);
         }
@@ -155,7 +158,7 @@ public class ExcelUtil {
      * @return
      */
     public static List<Map<String, String>> importExcelXls(File file, String[] titles) {
-        List<Map<String, String>> res = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> res = new ArrayList<>();
 
         try {
             if (null != file && file.exists()) {
@@ -184,7 +187,7 @@ public class ExcelUtil {
 
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("", e);
         }
 
         return res;
@@ -198,12 +201,14 @@ public class ExcelUtil {
      * @return
      */
     public static List<Map<String, String>> importExcelXlsx(File file, String[] titles) {
-        List<Map<String, String>> res = new ArrayList<Map<String, String>>();
+        List<Map<String, String>> res = new ArrayList<>();
 
         try {
             if (null != file && file.exists()) {
-                XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(file));
-                XSSFSheet sheet = xwb.getSheetAt(0);
+                XSSFSheet sheet;
+                try (XSSFWorkbook xwb = new XSSFWorkbook(new FileInputStream(file))) {
+                    sheet = xwb.getSheetAt(0);
+                }
                 if (null != sheet) {
                     XSSFRow row;
 
@@ -219,7 +224,7 @@ public class ExcelUtil {
                                 String value;
 
                                 if (Cell.CELL_TYPE_NUMERIC == row.getCell(j).getCellType()) {
-                                    value = String.valueOf(new Double(row.getCell(j).getNumericCellValue()).intValue());
+                                    value = String.valueOf((int) row.getCell(j).getNumericCellValue());
                                 } else {
                                     value = row.getCell(j).getStringCellValue();
                                 }
@@ -233,7 +238,7 @@ public class ExcelUtil {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("", e);
         }
 
         return res;
@@ -253,7 +258,7 @@ public class ExcelUtil {
             // 表头内容水平居中显示
             headerFormat.setAlignment(Alignment.CENTRE);
         } catch (WriteException e) {
-            System.out.println("表头单元格样式设置失败！");
+            log.error("表头单元格样式设置失败！", e);
         }
         return headerFormat;
     }
@@ -268,7 +273,7 @@ public class ExcelUtil {
             // 整个表格线为细线、黑色
             bodyFormat.setBorder(Border.ALL, BorderLineStyle.THIN, Colour.BLACK);
         } catch (WriteException e) {
-            System.out.println("表体单元格样式设置失败！");
+            log.error("表体单元格样式设置失败！", e);
         }
         return bodyFormat;
     }

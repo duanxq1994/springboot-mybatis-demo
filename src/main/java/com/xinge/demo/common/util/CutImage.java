@@ -10,12 +10,13 @@ import java.io.IOException;
 
 /**
  * 图片缩放剪裁
- *
- * @author chunbo
- * @version $Id: CutImageService.java, v 0.1 2016年3月30日 下午7:45:41 chunbo Exp $
  */
 @Slf4j
 public class CutImage {
+
+    private CutImage() {
+
+    }
 
     public static byte[] cutImageService(BufferedImage image, int cutWide, int cutHigh) {
         BufferedImage tag = null;
@@ -60,7 +61,7 @@ public class CutImage {
             imageBytes = os.toByteArray();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.warn("", e);
         }
 
 
@@ -80,7 +81,7 @@ public class CutImage {
         try {
             ImageIO.write(bImage, format, out);
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warn("", e);
         }
         return out.toByteArray();
     }

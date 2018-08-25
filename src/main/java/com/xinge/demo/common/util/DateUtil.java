@@ -19,7 +19,7 @@ import java.util.Date;
  */
 public class DateUtil extends DateUtils {
 
-    private final static Logger logger = LoggerFactory.getLogger(DateUtil.class);
+    private static final  Logger logger = LoggerFactory.getLogger(DateUtil.class);
 
     public static final String DATE_FORMAT = "yyyy-MM-dd";
     public static final String DATE_FORMAT_NO_DELIMITER = "yyyyMMdd";
@@ -163,7 +163,7 @@ public class DateUtil extends DateUtils {
     }
 
     /**
-     * 判断传入的字符串dateStr是否是日期格式patternStr的字符串 @author yejg
+     * 判断传入的字符串dateStr是否是日期格式patternStr的字符串
      *
      * @param dateStr
      * @param patternStr
@@ -174,9 +174,9 @@ public class DateUtil extends DateUtils {
         try {
             date = parse(dateStr, patternStr);
         } catch (Exception e) {
+            logger.warn("日期解析错误：", e);
         }
-
-        return date == null ? false : true;
+        return date != null;
     }
 
     /**
@@ -206,8 +206,8 @@ public class DateUtil extends DateUtils {
             String h = "";
             String m = "";
             String s = "";
-            h = (int) t / 3600 + "";
-            m = (int) (t % 3600) / 60 + "";
+            h = t / 3600 + "";
+            m = t % 3600 / 60 + "";
             s = t % 60 + "";
             if (h.length() <= 1) {
                 h = "0" + h;
@@ -237,7 +237,7 @@ public class DateUtil extends DateUtils {
             long end = endDate.getTime();
             long start = startDate.getTime();
             long betweenDate = (end - start) / (60 * 1000);
-            min = Long.valueOf(betweenDate).intValue();
+            min = (int) betweenDate;
         }
         return min;
     }
@@ -322,15 +322,15 @@ public class DateUtil extends DateUtils {
      */
     public static Date getFiveteen() {
         //获取当月一号的时间
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_TIME_FORMAT);
         String format = sdf.format(new Date());
         String substring = format.substring(0, 8);
         String fiveteenData = substring + "-15 00:00:00";
         Date date = null;
         try {
-            date = (Date) sdf.parse(fiveteenData);
+            date = sdf.parse(fiveteenData);
         } catch (ParseException e) {
-            e.printStackTrace();
+            logger.warn("", e);
         }
         return date;
     }

@@ -14,6 +14,10 @@ import java.util.Map;
  */
 public class DebugHelper {
 
+    private DebugHelper() {
+
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static Map filterField(final Map map) {
         if (map == null) {
@@ -179,9 +183,9 @@ public class DebugHelper {
                     chr[i - 1] = string.charAt(i - 1);
                 }
             }
-            StringBuffer sb = new StringBuffer();
-            for (int i = 0; i < chr.length; i++) {
-                sb.append(chr[i]);
+            StringBuilder sb = new StringBuilder();
+            for (char aChr : chr) {
+                sb.append(aChr);
             }
             return sb.toString();
         }

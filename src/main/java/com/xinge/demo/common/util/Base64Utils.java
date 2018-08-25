@@ -10,28 +10,28 @@ public class Base64Utils {
     /**
      * Byte value that maps to 'a' in Base64 encoding
      */
-    private final static int LOWER_CASE_A_VALUE = 26;
+    private static final int LOWER_CASE_A_VALUE = 26;
 
     /**
      * Byte value that maps to '0' in Base64 encoding
      */
-    private final static int ZERO_VALUE = 52;
+    private static final int ZERO_VALUE = 52;
 
     /**
      * Byte value that maps to '+' in Base64 encoding
      */
-    private final static int PLUS_VALUE = 62;
+    private static final int PLUS_VALUE = 62;
 
     /**
      * Byte value that maps to '/' in Base64 encoding
      */
-    private final static int SLASH_VALUE = 63;
+    private static final int SLASH_VALUE = 63;
 
     /**
      * Bit mask for one character worth of bits in Base64 encoding.
      * Equivalent to binary value 111111b.
      */
-    private final static int SIX_BIT_MASK = 63;
+    private static final int SIX_BIT_MASK = 63;
 
     /**
      * Bit mask for one byte worth of bits in Base64 encoding.
@@ -72,7 +72,7 @@ public class Base64Utils {
         // New lines will also be needed for every 76 charactesr, so allocate a
         // StringBuffer that is long enough to hold the full result without
         // having to expand later
-        StringBuffer result = new StringBuffer((charCount * 77) / 76);
+        StringBuilder result = new StringBuilder((charCount * 77) / 76);
 
         int byteArrayLength = data.length;
         int byteArrayIndex = 0;
@@ -101,11 +101,6 @@ public class Base64Utils {
             result.append(mapByteToChar(b2));
             result.append(mapByteToChar(b3));
             result.append(mapByteToChar(b4));
-
-            // There are 57 bytes for every 76 characters, so wrap the line when needed
-            //if ( byteArrayIndex % 57 == 0 ) {
-            //    result.append( "\n" );
-            //}
         }
 
         // Check if we have one byte left over
@@ -182,9 +177,6 @@ public class Base64Utils {
                 mUsefulLength++;
             }
         }
-
-        //mString = data;
-
 
         // A Base64 byte array is 75% the size of its String representation
         int byteArrayLength = mUsefulLength * 3 / 4;
@@ -307,7 +299,7 @@ public class Base64Utils {
             return '/';
         }
 
-        throw new IllegalArgumentException("Byte " + new Integer(b) + " is not a valid Base64 value");
+        throw new IllegalArgumentException("Byte " + (int) b + " is not a valid Base64 value");
     }
 
     /**
@@ -353,13 +345,4 @@ public class Base64Utils {
         return 256 + b;
     }
 
-    public static void main(String args[]) throws Exception {
-        String tString = "I am ����ԣ!1";
-
-        System.out.println("Text = [" + tString + "]");
-        String tEncoded = Base64Utils.encode(tString.getBytes());
-        System.out.println("Encoded = [" + tEncoded + "]");
-        byte[] tDecoded = Base64Utils.decode(tEncoded);
-        System.out.println("Decoded = [" + new String(tDecoded) + "]");
-    }
 }
