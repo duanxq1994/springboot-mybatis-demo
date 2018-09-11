@@ -19,11 +19,10 @@ public class BankController {
     private BankMapper bankMapper;
 
     /**
-     * 连连支付支持银行列表
+     * 银行列表
      *
      * @return
      */
-    @ResponseBody
     @PostMapping(value = "bankList.json")
     public Object bankList() {
         ResultEntity result = new ResultEntity(ResultEntity.ERROR);

@@ -20,7 +20,7 @@ public class BankService extends BaseService<BankDO> {
     public BankDO queryByBankName(String bankName) {
         BankDO query = new BankDO();
         query.setName(bankName);
-        return queryForObject(query);
+        return queryForList(query).get(0);
     }
 
 }

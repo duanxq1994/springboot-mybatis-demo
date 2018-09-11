@@ -23,7 +23,7 @@ public abstract class BaseService<T> {
     @Autowired
     public MyMapper<T> mapper;
 
-    public Logger logger = LoggerFactory.getLogger(getClass());
+    protected Logger logger = LoggerFactory.getLogger(getClass());
 
 
     /**
@@ -75,17 +75,6 @@ public abstract class BaseService<T> {
      */
     public T queryByPK(Object key) {
         return mapper.selectByPrimaryKey(key);
-    }
-
-    /**
-     * 根据条件查询单条数据
-     * @deprecated 查询出多条会抛出异常，应根据业务，编写单独的查询方法
-     * @param obj
-     * @return
-     */
-    @Deprecated
-    public T queryForObject(T obj) {
-        return mapper.selectOne(obj);
     }
 
     /**

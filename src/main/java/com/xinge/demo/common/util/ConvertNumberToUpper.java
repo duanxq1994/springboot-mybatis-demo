@@ -1,11 +1,13 @@
 package com.xinge.demo.common.util;
 
+import lombok.extern.slf4j.Slf4j;
 /**
  * 转换阿拉伯数字为汉字大写
  *
  * @author shanyiliang
  * @date 2017/9/21
  */
+@Slf4j
 public class ConvertNumberToUpper {
 
     private static final String UNIT = "万千佰拾亿千佰拾万千佰拾元角分";
@@ -51,7 +53,7 @@ public class ConvertNumberToUpper {
     }
 
     public static void main(String[] args) {
-        System.out.println(digitUppercase(456789123456.10D));
+        log.info(digitUppercase(456789123456.10D));
     }
 
 
