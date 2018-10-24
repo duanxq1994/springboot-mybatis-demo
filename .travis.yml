@@ -1,0 +1,16 @@
+language: java
+sudo: false
+install: true
+
+
+jdk:
+  - oraclejdk8
+
+cache:
+  directories:
+    - '$HOME/.m2/repository'
+    - '$HOME/.sonar/cache'
+
+script:
+  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar \-Dsonar.projectKey=duanxq1994_springboot-mybatis-demo \-Dsonar.organization=duanxq1994-github \-Dsonar.host.url=https://sonarcloud.io \-Dsonar.login=5790c96bfb33bcf1cc4be5209270b9024c6f9112
