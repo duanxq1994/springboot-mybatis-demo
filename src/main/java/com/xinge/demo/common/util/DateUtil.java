@@ -30,8 +30,8 @@ public class DateUtil extends DateUtils {
     public static final String DATE_TIME_FORMAT_NO_SEC = "yyyy-MM-dd HH:mm";
     public static final String DATE_TIME_FORMAT_NO_DELIMITER = "yyyyMMddHHmmss";
     public static final String DATE_PRECISE_TO_MINUTE = "yyyyMMddHHmm";
-    public static final String[] WEEKS = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
-    public static final String[] DEFAULT_FORMATS = {TIMESTAMP_FORMAT, DATE_TIME_FORMAT, DATE_FORMAT, TIME_FORMAT, DATE_PRECISE_TO_MINUTE};
+    private static final String[] WEEKS = {"Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
+    private static final String[] DEFAULT_FORMATS = {TIMESTAMP_FORMAT, DATE_TIME_FORMAT, DATE_FORMAT, TIME_FORMAT, DATE_PRECISE_TO_MINUTE};
 
     /**
      * 自动判断日期字符串的格式，返回Date对象

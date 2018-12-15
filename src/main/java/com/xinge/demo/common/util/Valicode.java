@@ -3,6 +3,8 @@ package com.xinge.demo.common.util;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.security.SecureRandom;
+import java.util.Random;
 
 /**
  * 验证码生成器
@@ -24,8 +26,8 @@ public class Valicode {
         g.setColor(Color.white);
         g.fillRect(0, 0, 74, 30);
         for (int i = 0; i < 100; i++) {
-            int x = (int) Math.round(Math.random() * 74);
-            int y = (int) Math.round((Math.random() * 30));
+            int x = new SecureRandom().nextInt(74);
+            int y = new SecureRandom().nextInt(30);
             Color color = new Color((float) (Math.random() * 0.7) + 0.3F, (float) (Math.random() * 0.7) + 0.3F,
                     (float) (Math.random() * 0.7) + 0.3F);
             g.setColor(color);

@@ -62,7 +62,7 @@ public class JsonUtil {
 
     public static String stringToJson(String s) {
         if (s == null) {
-            return nullToJson();
+            return "";
         }
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
@@ -106,15 +106,6 @@ public class JsonUtil {
             }
         }
         return sb.toString();
-    }
-
-    /**
-     * <b>概要：</b> 对象为空，则返回空字符串 <b>作者：</b>suxh </br> <b>日期：</b>2015-1-28 </br>
-     *
-     * @return 空字符串
-     */
-    public static String nullToJson() {
-        return "";
     }
 
     /**
