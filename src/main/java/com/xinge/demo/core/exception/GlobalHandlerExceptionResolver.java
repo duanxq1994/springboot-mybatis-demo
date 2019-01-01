@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -116,7 +117,9 @@ public class GlobalHandlerExceptionResolver extends AbstractHandlerExceptionReso
         resultEntity.setMsg(message);
         HttpServletRequest request = RequestUtil.getRequest();
         request.setAttribute(StringConstant.REQUEST_MAP, resultEntity);
-        return new ModelAndView("", resultEntity);
+        MappingJackson2JsonView view = new MappingJackson2JsonView();
+        view.setAttributesMap(resultEntity);
+        return new ModelAndView(view);
     }
 
 }

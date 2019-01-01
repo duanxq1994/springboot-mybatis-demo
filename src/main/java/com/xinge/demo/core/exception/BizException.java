@@ -9,23 +9,22 @@ public class BizException extends RuntimeException {
 
     private final int code;
 
-    private final String errorMsg;
-
     public BizException(int code) {
         this.code = code;
-        this.errorMsg = "";
+    }
+
+    public BizException(String errorMsg) {
+        super(errorMsg);
+        this.code = ErrorCode.BIZ_ERROR.getCode();
     }
 
     public BizException(int code, String errorMsg) {
+        super(errorMsg);
         this.code = code;
-        this.errorMsg = errorMsg;
     }
 
     public int getCode() {
         return code;
     }
 
-    public String getErrorMsg() {
-        return errorMsg;
-    }
 }
