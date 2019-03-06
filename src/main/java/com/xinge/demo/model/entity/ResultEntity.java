@@ -1,119 +1,32 @@
 package com.xinge.demo.model.entity;
 
-import java.util.HashMap;
-import java.util.List;
+import lombok.Data;
 
 /**
- * AJAX结果返回实体
+ * 返回实体
  *
- * @author wgyi
- * @vision 2015年8月16日
+ * @author duanx
+ * @date 2019-1-19
  */
-public class ResultEntity extends HashMap<String, Object> {
-    private static final long serialVersionUID = 457278793578226564L;
+@Data
+public class ResultEntity<T> {
 
-    public static final int SUCCESS = 0;
-    public static final int ERROR = -1;
-    public static final int NOT_LOGIN = 1001;
-
+    public static final int SUCCESS = 200;
 
     public ResultEntity() {
-        this.setCode(ERROR);
+
     }
 
-    public ResultEntity(int code) {
-        this.setCode(code);
+    public ResultEntity(Integer code) {
+        this.code = code;
     }
 
-    /**
-     * 设置结果代码
-     *
-     * @param code
-     */
-    public void setCode(int code) {
-        this.put("code", code);
-    }
+    private Integer code;
 
-    public int getCode() {
-        return (Integer) this.get("code");
-    }
+    private String message;
 
-    /**
-     * 设置结果集总数量
-     *
-     * @param count
-     */
-    public void setCount(Integer count) {
-        this.put("count", count);
-    }
+    private String error;
 
-    public Integer getCount() {
-        return (Integer) this.get("count");
-    }
+    private T data;
 
-    /**
-     * 设置结果集
-     *
-     * @param list
-     */
-    public void setList(List<?> list) {
-        this.put("list", list);
-    }
-
-    /**
-     * 设置返回实体（不是list的时候）
-     *
-     * @param obj
-     */
-    public void setObject(Object obj) {
-        this.put("obj", obj);
-    }
-
-    public Object getObject() {
-        return (this.get("obj"));
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T> List<T> getList() {
-        return (List<T>) this.get("list");
-    }
-
-    /**
-     * 设置错误信息
-     *
-     * @param error
-     */
-    public void setError(String error) {
-        this.put("error", error);
-    }
-
-    public String getError() {
-        return (String) this.get("error");
-    }
-
-    /**
-     * 设置需要跳转的页面地址
-     *
-     * @param redirect
-     */
-    public void setRedirect(String redirect) {
-        this.put("redirect", redirect);
-    }
-
-    public String getRedirect() {
-        return (String) this.get("redirect");
-    }
-
-    /**
-     * 设置需要显示的消息
-     *
-     * @param msg
-     */
-    public void setMsg(String msg) {
-        this.put("msg", msg);
-    }
-
-    public String getMsg() {
-        return (String) this.get("msg");
-    }
 }

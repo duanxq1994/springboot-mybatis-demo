@@ -8,9 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -96,7 +94,7 @@ public class GlobalExceptionHandler {
     private ResultEntity createResultEntity(Integer code, String error, String message) {
         ResultEntity resultEntity = new ResultEntity(code);
         resultEntity.setError(error);
-        resultEntity.setMsg(message);
+        resultEntity.setMessage(message);
         request.setAttribute(StringConstant.REQUEST_MAP, resultEntity);
         return resultEntity;
     }

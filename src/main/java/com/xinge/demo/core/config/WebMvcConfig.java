@@ -1,13 +1,11 @@
-package com.xinge.demo.web.config;
+package com.xinge.demo.core.config;
 
 import com.xinge.demo.core.exception.GlobalHandlerExceptionResolver;
 import com.xinge.demo.core.format.TimeStampFormatAnnotationFormatterFactory;
 import com.xinge.demo.core.interception.LoggerInterceptor;
 import com.xinge.demo.core.interception.UserLoginInterception;
-import com.xinge.demo.core.resolver.SessionArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
@@ -30,14 +28,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     }
 
     @Override
-    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
-        argumentResolvers.add(new SessionArgumentResolver());
-        super.addArgumentResolvers(argumentResolvers);
-    }
-
-    @Override
     public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
-        exceptionResolvers.add(new GlobalHandlerExceptionResolver());
+        exceptionResolvers.add(0, new GlobalHandlerExceptionResolver());
         super.extendHandlerExceptionResolvers(exceptionResolvers);
     }
 

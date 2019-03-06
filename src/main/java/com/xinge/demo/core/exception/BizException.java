@@ -9,10 +9,6 @@ public class BizException extends RuntimeException {
 
     private final int code;
 
-    public BizException(int code) {
-        this.code = code;
-    }
-
     public BizException(String errorMsg) {
         super(errorMsg);
         this.code = ErrorCode.BIZ_ERROR.getCode();

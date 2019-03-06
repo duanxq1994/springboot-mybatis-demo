@@ -54,3 +54,6 @@ pagehelper:
   reasonable: 'false'
   support-methods-arguments: 'false'
   params: pageNum=pageNum;pageSize=PageSize;
+
+  dozer:
+    mapping-files: dozer-mapping.xml

@@ -4,47 +4,21 @@ import lombok.Data;
 
 import javax.persistence.Column;
 import javax.persistence.Id;
+import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- *
- * @author duanxq
- * @date 2017/9/13
- */
 @Data
-public class User {
+public class Member {
+    /**
+     * 主键
+     */
     @Id
     private Integer id;
 
     /**
-     * 账户名
+     * 用户名
      */
     private String name;
-
-    /**
-     * 密码
-     */
-    private String password;
-
-    /**
-     * 盐值
-     */
-    private String salt;
-
-    /**
-     * 状态，0：禁用，1：启用
-     */
-    private Integer status;
-
-    /**
-     * 备注
-     */
-    private String remark;
-
-    /**
-     * 邮箱
-     */
-    private String email;
 
     /**
      * 手机号
@@ -52,9 +26,30 @@ public class User {
     private String mobile;
 
     /**
-     * 账户类型，1：管理员，2：超级管理员
+     * 邮箱地址
+     */
+    private String email;
+
+    /**
+     * 用户密码
+     */
+    private String password;
+
+    /**
+     * 密码盐值
+     */
+    @Column(name = "password_salt")
+    private String passwordSalt;
+
+    /**
+     * 用户类型，0：账号，1：QQ登录，2：微信登录
      */
     private Integer type;
+
+    /**
+     * 账户余额
+     */
+    private BigDecimal amount;
 
     /**
      * 版本号
@@ -68,7 +63,7 @@ public class User {
     private Date createTime;
 
     /**
-     * 用于修改密码
+     * 用户修改密码
      */
     private String token;
 
