@@ -1,4 +1,4 @@
-package com.xinge.demo.service;
+package com.xinge.demo.core;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -18,7 +18,7 @@ import java.util.List;
  * @author duanxq
  * @date 2017/9/9
  */
-public abstract class BaseService<T> {
+public abstract class BaseService<T> implements IService<T> {
 
     @Autowired
     public MyMapper<T> mapper;
@@ -32,6 +32,7 @@ public abstract class BaseService<T> {
      * @param obj
      * @return
      */
+    @Override
     public void add(T obj) {
         mapper.insertSelective(obj);
     }
@@ -43,6 +44,7 @@ public abstract class BaseService<T> {
      * @param key
      * @return
      */
+    @Override
     public void del(Object key) {
         mapper.deleteByPrimaryKey(key);
     }
@@ -53,6 +55,7 @@ public abstract class BaseService<T> {
      * @param obj
      * @return
      */
+    @Override
     public void editByPK(T obj) {
         mapper.updateByPrimaryKeySelective(obj);
     }
@@ -63,6 +66,7 @@ public abstract class BaseService<T> {
      * @param obj     需要编辑的内容
      * @param example 编辑条件
      */
+    @Override
     public void editByExample(T obj, Example example) {
         mapper.updateByExampleSelective(obj, example);
     }
@@ -73,6 +77,7 @@ public abstract class BaseService<T> {
      * @param key
      * @return
      */
+    @Override
     public T queryByPK(Object key) {
         return mapper.selectByPrimaryKey(key);
     }
@@ -83,6 +88,7 @@ public abstract class BaseService<T> {
      * @param obj
      * @return
      */
+    @Override
     public List<T> queryForList(T obj) {
         return mapper.select(obj);
     }
@@ -92,6 +98,7 @@ public abstract class BaseService<T> {
      * @param obj
      * @return
      */
+    @Override
     public Integer queryForCount(T obj) {
         return mapper.selectCount(obj);
     }
@@ -102,6 +109,7 @@ public abstract class BaseService<T> {
      * @param obj
      * @return
      */
+    @Override
     public BatchResultDTO<T> queryForPageList(T obj) {
         Assert.isTrue(obj instanceof PageDO, String.format("%s need to extends pageDo", obj.getClass().getName()));
         BatchResultDTO<T> resultDTO = new BatchResultDTO<>();
