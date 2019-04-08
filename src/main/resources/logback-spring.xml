@@ -3,7 +3,7 @@
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
     <include resource="org/springframework/boot/logging/logback/console-appender.xml" />
 
-    <springProfile name="dev">
+    <springProfile name="local">
         <root level="${LOG_LEVEL:-info}">
             <appender-ref ref="CONSOLE"/>
         </root>
