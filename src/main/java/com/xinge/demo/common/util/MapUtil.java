@@ -6,6 +6,10 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
+import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,18 +30,24 @@ public class MapUtil {
      * @param obj
      * @return
      */
-    @SuppressWarnings("unchecked")
     public static Map<String, Object> beanToMap(Object obj) {
         if (obj == null) {
             return null;
         }
-        if (obj instanceof Map) {
-            return (Map) obj;
-        }
-        Map params = new HashMap();
+        Map<String, Object> params = new HashMap<>();
         try {
-            params = BeanUtils.describe(obj);
-            params.remove("class");
+            BeanInfo beanInfo = Introspector.getBeanInfo(obj.getClass());
+            PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+            for (PropertyDescriptor property : propertyDescriptors) {
+                String key = property.getName();
+                // 过滤class属性
+                if (!"class".equals(key)) {
+                    // 得到property对应的getter方法
+                    Method getter = property.getReadMethod();
+                    Object value = getter.invoke(obj);
+                    params.put(key, value);
+                }
+            }
         } catch (Exception e) {
             log.error("", e);
         }

@@ -1,4 +1,4 @@
-package com.xinge.demo.model.entity;
+package com.xinge.demo.core.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

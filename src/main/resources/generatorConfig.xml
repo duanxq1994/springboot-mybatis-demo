@@ -19,7 +19,7 @@
                         password="123456">
         </jdbcConnection>
 
-        <javaModelGenerator targetPackage="com.xinge.demo.model.domain" targetProject="src/main/java"/>
+        <javaModelGenerator targetPackage="com.xinge.demo.model" targetProject="src/main/java"/>
 
         <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
 

@@ -1,4 +1,4 @@
-package com.xinge.demo.web.config;
+package com.xinge.demo.core.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;

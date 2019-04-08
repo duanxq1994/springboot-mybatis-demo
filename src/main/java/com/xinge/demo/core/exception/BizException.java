@@ -7,36 +7,32 @@ package com.xinge.demo.core.exception;
  */
 public class BizException extends RuntimeException {
 
-    private int code = ErrorCode.BIZ_ERROR.getCode();
+    private final int code;
 
-    private String errorMsg;
-
-    public BizException(int code) {
-        this.code = code;
-    }
+    private Object data;
 
     public BizException(String errorMsg) {
-        this.errorMsg = errorMsg;
+        super(errorMsg);
+        this.code = ErrorCode.BIZ_ERROR.getCode();
     }
 
     public BizException(int code, String errorMsg) {
+        super(errorMsg);
         this.code = code;
-        this.errorMsg = errorMsg;
+    }
+
+    public BizException(int code, String errorMsg, Object data) {
+        super(errorMsg);
+        this.code = code;
+        this.data = data;
+    }
+
+    public Object getData() {
+        return data;
     }
 
     public int getCode() {
         return code;
     }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public String getErrorMsg() {
-        return errorMsg;
-    }
-
-    public void setErrorMsg(String errorMsg) {
-        this.errorMsg = errorMsg;
-    }
 }

@@ -1,21 +1,27 @@
 package com.xinge.demo.core.exception;
 
 import com.xinge.demo.common.constant.StringConstant;
+import com.xinge.demo.common.util.MapUtil;
 import com.xinge.demo.common.util.RequestUtil;
-import com.xinge.demo.model.entity.ResultEntity;
+import com.xinge.demo.core.entity.ResultEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.handler.AbstractHandlerExceptionResolver;
+import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * 全局异常处理
@@ -24,81 +30,88 @@ import javax.servlet.http.HttpServletResponse;
  * @date 2017/12/1
  */
 @Slf4j
-public class GlobalHandlerExceptionResolver extends AbstractHandlerExceptionResolver{
+public class GlobalHandlerExceptionResolver extends DefaultHandlerExceptionResolver {
 
     @Override
     public ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        HandlerMethod method = (HandlerMethod)handler;
+        if (!(handler instanceof HandlerMethod)) {
+            return null;
+        }
+        HandlerMethod method = (HandlerMethod) handler;
         ResponseBody responseBody = method.getMethodAnnotation(ResponseBody.class);
         RestController restController = method.getBeanType().getAnnotation(RestController.class);
         if (responseBody == null && restController == null) {
             return null;
         }
-        ModelAndView mv;
         if (ex instanceof BizException) {
-            mv = handlerBizException((BizException) ex);
-        } else if(ex instanceof IllegalArgumentException){
-            mv = handlerIllegalArgumentException((IllegalArgumentException) ex);
-        } else if(ex instanceof BindException){
-            mv = handlerBindException((BindException) ex);
-        } else if(ex instanceof MethodArgumentNotValidException){
-            mv = handlerMethodArgumentNotValidException((MethodArgumentNotValidException) ex);
-        } else if(ex instanceof DataAccessException){
-            mv = handlerDataAccessException((DataAccessException) ex);
+            return handlerBizException((BizException) ex, request, response, handler);
+        } else if (ex instanceof IllegalArgumentException) {
+            return handlerIllegalArgumentException((IllegalArgumentException) ex, request, response, handler);
+        } else if (ex instanceof DataAccessException) {
+            return handlerDataAccessException((DataAccessException) ex, request, response, handler);
         } else {
-            mv = handlerException(ex);
+            ModelAndView mv = super.doResolveException(request, response, handler, ex);
+            if (mv != null) {
+                return mv;
+            }
+            return handlerException(ex, request, response, handler);
         }
-        return mv;
     }
 
-    private ModelAndView handlerBizException(BizException e) {
+    private ModelAndView handlerBizException(BizException e, HttpServletRequest request, HttpServletResponse response, Object handler) {
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         Integer code = e.getCode();
-        String message = e.getMessage();
-        String error = StringUtils.defaultIfBlank(message, ErrorCode.BIZ_ERROR.getMsg());
-        return createResultEntity(code, error, message);
+        String message = StringUtils.defaultIfBlank(e.getMessage(), ErrorCode.BIZ_ERROR.getMsg());
+        Object data = e.getData();
+        return createResultEntity(code, message, message, data);
     }
 
-    private ModelAndView handlerIllegalArgumentException(IllegalArgumentException e) {
+    private ModelAndView handlerIllegalArgumentException(IllegalArgumentException e, HttpServletRequest request, HttpServletResponse response, Object handler) {
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
         Integer code = ErrorCode.ARGUMENTS_ERROR.getCode();
-        String message = e.getMessage();
-        String error = StringUtils.defaultIfBlank(message, ErrorCode.ARGUMENTS_ERROR.getMsg());
-        return createResultEntity(code, error, message);
+        String message = StringUtils.defaultIfBlank(e.getMessage(), ErrorCode.ARGUMENTS_ERROR.getMsg());
+        return createResultEntity(code, message, message);
     }
 
-    private ModelAndView handlerBindException(BindException e) {
+    @Override
+    protected ModelAndView handleBindException(BindException ex, HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
         Integer code = ErrorCode.ARGUMENTS_ERROR.getCode();
-        String message = e.getFieldError().getDefaultMessage();
-        String error;
+        String message = ex.getFieldError().getDefaultMessage();
+        String error = message;
         //错误信息长度限制为20
         int lengthLimit = 20;
-        if (StringUtils.isNotBlank(message) && message.length() <= lengthLimit) {
-            error = message;
-        } else {
-            error = ErrorCode.ARGUMENTS_ERROR.getMsg();
+        if (StringUtils.isBlank(message) || message.length() > lengthLimit) {
+            message = ErrorCode.ARGUMENTS_ERROR.getMsg();
         }
         return createResultEntity(code, error, message);
     }
 
-    private ModelAndView handlerMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+    @Override
+    protected ModelAndView handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
+        response.setStatus(HttpStatus.BAD_REQUEST.value());
         Integer code = ErrorCode.ARGUMENTS_ERROR.getCode();
-        String message = e.getBindingResult().getFieldError().getDefaultMessage();
-        String error = StringUtils.defaultIfBlank(message, ErrorCode.ARGUMENTS_ERROR.getMsg());
+        FieldError fieldError = ex.getBindingResult().getFieldError();
+        String message = StringUtils.defaultIfBlank(fieldError.getDefaultMessage(), ErrorCode.ARGUMENTS_ERROR.getMsg());
+        String error = String.format("[%s]%s", fieldError.getField(), message);
         return createResultEntity(code, error, message);
     }
 
-    private ModelAndView handlerDataAccessException(DataAccessException e) {
+    private ModelAndView handlerDataAccessException(DataAccessException e, HttpServletRequest request, HttpServletResponse response, Object handler) {
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         Integer code = ErrorCode.PERSISTENCE_ERROR.getCode();
-        String message = e.getMessage();
-        String error = ErrorCode.PERSISTENCE_ERROR.getMsg();
-        log.warn(e.getMessage());
+        String error = ExceptionUtils.getRootCauseMessage(e);
+        String message = ErrorCode.PERSISTENCE_ERROR.getMsg();
+        log.warn("", e);
         return createResultEntity(code, error, message);
     }
 
-    private ModelAndView handlerException(Exception e) {
+    private ModelAndView handlerException(Exception e, HttpServletRequest request, HttpServletResponse response, Object handler) {
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         Integer code = ErrorCode.SYSTEM_ERROR.getCode();
-        String message = e.getMessage();
-        String error = ErrorCode.SYSTEM_ERROR.getMsg();
-        log.warn(error, e);
+        String error = ExceptionUtils.getRootCauseMessage(e);
+        String message = ErrorCode.SYSTEM_ERROR.getMsg();
+        log.warn(message, e);
         return createResultEntity(code, error, message);
     }
 
@@ -111,12 +124,28 @@ public class GlobalHandlerExceptionResolver extends AbstractHandlerExceptionReso
      * @return 返回实体
      */
     private ModelAndView createResultEntity(Integer code, String error, String message) {
-        ResultEntity resultEntity = new ResultEntity(code);
+        return createResultEntity(code, error, message, null);
+    }
+
+    /**
+     * 生成返回的实体
+     *
+     * @param code    错误编号
+     * @param error   错误提示
+     * @param message 错误信息
+     * @param data    报错并返回的实体信息
+     * @return 返回实体
+     */
+    private ModelAndView createResultEntity(Integer code, String error, String message, Object data) {
+        ResultEntity<Object> resultEntity = new ResultEntity<>(code);
         resultEntity.setError(error);
-        resultEntity.setMsg(message);
+        resultEntity.setMessage(message);
+        resultEntity.setData(data);
         HttpServletRequest request = RequestUtil.getRequest();
         request.setAttribute(StringConstant.REQUEST_MAP, resultEntity);
-        return new ModelAndView("", resultEntity);
+        MappingJackson2JsonView view = new MappingJackson2JsonView();
+        view.setAttributesMap(MapUtil.beanToMap(resultEntity));
+        return new ModelAndView(view);
     }
 
 }

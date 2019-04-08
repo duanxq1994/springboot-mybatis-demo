@@ -2,8 +2,8 @@ package com.xinge.demo.core;
 
 import com.xinge.demo.common.constant.StringConstant;
 import com.xinge.demo.common.util.RequestUtil;
-import com.xinge.demo.model.entity.ResultEntity;
-import org.apache.commons.lang3.ObjectUtils;
+import com.xinge.demo.core.entity.ResultEntity;
+import com.xinge.demo.core.entity.SuccessResult;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
@@ -28,8 +28,7 @@ public class JsonResultBodyAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(MethodParameter returnType, Class<? extends HttpMessageConverter<?>> converterType) {
-        return returnType.getParameterType().isAssignableFrom(ResultEntity.class)
-                && MappingJackson2HttpMessageConverter.class.isAssignableFrom(converterType);
+        return MappingJackson2HttpMessageConverter.class.isAssignableFrom(converterType);
     }
 
     @Override
@@ -37,8 +36,13 @@ public class JsonResultBodyAdvice implements ResponseBodyAdvice<Object> {
                                   ServerHttpResponse response) {
         // 这里把返回的结果设置到request中，供拦截器使用【使用ResponseBody的时候，拦截器postHandler中无法取到返回结果】
         HttpServletRequest req = RequestUtil.getRequest();
-        ResultEntity requestMap = ObjectUtils.clone((ResultEntity) body);
-        req.setAttribute(StringConstant.REQUEST_MAP, requestMap);
+        if (!(body instanceof SuccessResult)) {
+            ResultEntity<Object> resultEntity = new ResultEntity<>();
+            resultEntity.setData(body);
+            req.setAttribute(StringConstant.REQUEST_MAP, resultEntity);
+            return resultEntity;
+        }
+        req.setAttribute(StringConstant.REQUEST_MAP, body);
         return body;
     }
 
