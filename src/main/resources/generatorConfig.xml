@@ -10,11 +10,12 @@
 
         <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
             <property name="mappers" value="com.xinge.demo.common.util.MyMapper"/>
+            <property name="lombok" value="Data"/>
         </plugin>
 
         <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://192.168.18.228:3306/installment"
-                        userId="xinge"
+                        connectionURL="jdbc:mysql://192.168.18.228:3306/test"
+                        userId="root"
                         password="123456">
         </jdbcConnection>
 
@@ -25,11 +26,7 @@
         <javaClientGenerator targetPackage="com.xinge.demo.mapper" targetProject="src/main/java"
                              type="XMLMAPPER"/>
 
-        <table tableName="area" domainObjectName="AreaDO" mapperName="AreaMapper">
-            <!-- 使用数据库字段原始名字生成属性，false则使用驼峰命名法 -->
-            <property name="useActualColumnNames" value="true" />
-        </table>
-        <table tableName="bank" domainObjectName="BankDO" mapperName="BankMapper">
+        <table tableName="%">
             <!-- 使用数据库字段原始名字生成属性，false则使用驼峰命名法 -->
             <property name="useActualColumnNames" value="true" />
         </table>
