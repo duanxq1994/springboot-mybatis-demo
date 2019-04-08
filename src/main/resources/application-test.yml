@@ -13,15 +13,5 @@ spring:
 logging:
     level:
         root: info
-        com.xinge.installment: debug
-
-sms:
-    validate:
-        super:
-            #超级验证开关，默认false
-            open: true
-            #超级验证码，默认888888
-            code: 888888
-        #验证码长度，默认6
-        length: 6
+        com.xinge.demo: debug
 

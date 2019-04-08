@@ -5,7 +5,7 @@ server:
       timeout: 1800
 spring:
     profiles:
-        active: dev
+        active: local
     datasource:
         # 使用druid数据源
         type: com.alibaba.druid.pool.DruidDataSource
@@ -38,7 +38,7 @@ spring:
 
 
 mybatis:
-    type-aliases-package: com.xinge.demo.model.domain
+    type-aliases-package: com.xinge.demo.model
     mapper-locations: classpath:mapper/*.xml
 
 mapper:
