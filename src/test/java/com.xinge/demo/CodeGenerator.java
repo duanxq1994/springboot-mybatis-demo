@@ -40,7 +40,7 @@ public class CodeGenerator {
     private static final String DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());//@date
 
     public static void main(String[] args) {
-        genCode("member","order_sequence","paper_order","paper_price","paper_price_log","paper_type","supply_price","user");
+        genCode("user");
     }
 
     /**
