@@ -1,6 +1,7 @@
 package com.xinge.demo.common.util;
 
 import com.google.gson.Gson;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,7 @@ import java.util.Map;
  * @author jiangzihan
  * @version $$Id: com.xinge.demo.common.util, v 0.1 2017/9/13 16:47 jiangzihan Exp $$
  **/
+@Slf4j
 public class RefundPlanUtils {
 
     private static Logger logger = LoggerFactory.getLogger(RefundPlanUtils.class);
@@ -121,18 +123,18 @@ public class RefundPlanUtils {
 
     public static void main(String[] args) {
         String plan = RefundPlanUtils.createRefundPlan(System.currentTimeMillis(), 5000D, 12, 15);
-        System.out.println(plan);
+        log.info(plan);
         String plan1 = RefundPlanUtils.createRefundPlan(System.currentTimeMillis(), 501234L, 12, 15);
-        System.out.println(plan1);
+        log.info(plan1);
         //精度丢失问题
         double b = 0.29 * 100;
         double c = 0.29 * 10 * 10;
-        System.out.println("b:" + b);
+        log.info("b:" + b);
         //格式化，显示9位有效数字，且会进行四舍五入
-        System.out.println(String.format("%f", b));
+        log.info(String.format("%f", b));
         //格式化，精确到小数点后两位，且会进行四舍五入
-        System.out.println(String.format("%.2f", 28.999));
-        System.out.println("c:" + c);
+        log.info(String.format("%.2f", 28.999));
+        log.info("c:" + c);
 
 
     }

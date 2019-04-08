@@ -18,6 +18,13 @@ public class DebugHelper {
 
     }
 
+    public static final String TRADE_PASS_WORD_STR = "tradePwd";
+    public static final String ID_NO_STR = "id_no";
+    public static final String IDENTIFY_CODE_STR = "identify_code";
+    public static final String MOBILE_STR = "mobile";
+    public static final String CARD_NO_STR = "cardNo";
+
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static Map filterField(final Map map) {
         if (map == null) {
@@ -38,30 +45,27 @@ public class DebugHelper {
         }
 
         // 密码
-        if (filteredMap.get("tradePwd") != null) {
-            filteredMap.put("tradePwd", replacePassword(String.valueOf(filteredMap.get("tradePwd"))));
-        }
-        if (filteredMap.get("newTradePwd") != null) {
-            filteredMap.put("newTradePwd", replacePassword(String.valueOf(filteredMap.get("newTradePwd"))));
+        if (filteredMap.get(TRADE_PASS_WORD_STR) != null) {
+            filteredMap.put(TRADE_PASS_WORD_STR, replacePassword(String.valueOf(filteredMap.get(TRADE_PASS_WORD_STR))));
         }
 
         // 身份证
-        if (filteredMap.get("id_no") != null) {
-            filteredMap.put("id_no", encryptIdNo(String.valueOf(filteredMap.get("id_no"))));
+        if (filteredMap.get(ID_NO_STR) != null) {
+            filteredMap.put(ID_NO_STR, encryptIdNo(String.valueOf(filteredMap.get(ID_NO_STR))));
         }
-        if (filteredMap.get("identify_code") != null) {
-            filteredMap.put("identify_code", encryptIdNo(String.valueOf(filteredMap.get("identify_code"))));
+        if (filteredMap.get(IDENTIFY_CODE_STR) != null) {
+            filteredMap.put(IDENTIFY_CODE_STR, encryptIdNo(String.valueOf(filteredMap.get(IDENTIFY_CODE_STR))));
         }
 
         // 手机号
-        if (filteredMap.get("mobile") != null) {
-            filteredMap.put("mobile", encryptMobileTel(String.valueOf(filteredMap.get("mobile"))));
+        if (filteredMap.get(MOBILE_STR) != null) {
+            filteredMap.put(MOBILE_STR, encryptMobileTel(String.valueOf(filteredMap.get(MOBILE_STR))));
         }
 
         // 银行卡号
-        if (filteredMap.get("cardNo") != null) {
+        if (filteredMap.get(CARD_NO_STR) != null) {
             // bank_account可能传一个ArrayList，直接使用String强转会报错
-            Object obj = filteredMap.get("cardNo");
+            Object obj = filteredMap.get(CARD_NO_STR);
             StringBuilder encryptedBankNo = new StringBuilder();
             if (obj instanceof List) {
                 List tmpList = (List) obj;
@@ -75,15 +79,7 @@ public class DebugHelper {
             } else {
                 encryptedBankNo = new StringBuilder(encryptBankAccount(String.valueOf(obj)));
             }
-            filteredMap.put("cardNo", encryptedBankNo.toString());
-        }
-
-        // 地址
-        if (filteredMap.get("address") != null) {
-            filteredMap.put("address", encryptAddress(String.valueOf(filteredMap.get("address"))));
-        }
-        if (filteredMap.get("id_address") != null) {
-            filteredMap.put("id_address", encryptAddress(String.valueOf(filteredMap.get("id_address"))));
+            filteredMap.put(CARD_NO_STR, encryptedBankNo.toString());
         }
 
         return filteredMap;

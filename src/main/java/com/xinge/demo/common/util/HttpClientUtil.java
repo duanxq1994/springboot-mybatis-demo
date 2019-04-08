@@ -436,15 +436,14 @@ public class HttpClientUtil {
         }
         CloseableHttpClient httpclient;
         CloseableHttpResponse response = null;
+        if (proxyHost != null) {
+            httpclient = httpClientBuilder.setProxy(proxyHost).build();
+        } else {
+            httpclient = httpClientBuilder.build();
+        }
+        // 设置请求和传输超时时间
+        request.setConfig(RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build());
         try {
-            if (proxyHost != null) {
-                httpclient = httpClientBuilder.setProxy(proxyHost).build();
-            } else {
-                httpclient = httpClientBuilder.build();
-            }
-            // 设置请求和传输超时时间
-            RequestConfig requestConfig = RequestConfig.custom().setSocketTimeout(timeout).setConnectTimeout(timeout).build();
-            request.setConfig(requestConfig);
             response = httpclient.execute(request);
             for (Header header : response.getAllHeaders()) {
                 if ("Set-Cookie".equalsIgnoreCase(header.getName())) {
@@ -462,13 +461,11 @@ public class HttpClientUtil {
                 throw new RuntimeException("网络请求发生异常:" + response.getStatusLine());
             }
         } finally {
-            if (request != null) {
-                try {
-                    request.completed();
-                    request.abort();
-                } catch (Exception e) {
-                    logger.warn("关闭request发生错误", e);
-                }
+            try {
+                request.completed();
+                request.abort();
+            } catch (Exception e) {
+                logger.warn("关闭request发生错误", e);
             }
             if (response != null) {
                 try {

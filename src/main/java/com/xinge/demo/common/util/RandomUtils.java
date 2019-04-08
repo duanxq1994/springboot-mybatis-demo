@@ -1,10 +1,14 @@
 package com.xinge.demo.common.util;
 
+import lombok.extern.slf4j.Slf4j;
+
+import java.security.SecureRandom;
 import java.util.Random;
 
 /**
  * 随机数、随即字符串工具
  */
+@Slf4j
 public class RandomUtils {
     private static final String ALL_CHAR = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final String LETTER_CHAR = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -18,7 +22,7 @@ public class RandomUtils {
      */
     public static String generateString(int length) {
         StringBuilder sb = new StringBuilder();
-        Random random = new Random();
+        Random random = new SecureRandom();
         for (int i = 0; i < length; i++) {
             sb.append(ALL_CHAR.charAt(random.nextInt(ALL_CHAR.length())));
         }
@@ -33,7 +37,7 @@ public class RandomUtils {
      */
     public static String generateNumber(int length) {
         StringBuilder sb = new StringBuilder();
-        Random random = new Random();
+        Random random = new SecureRandom();
         for (int i = 0; i < length; i++) {
             sb.append(NUMBER_CHAR.charAt(random.nextInt(NUMBER_CHAR.length())));
         }
@@ -48,7 +52,7 @@ public class RandomUtils {
      */
     public static String generateMixString(int length) {
         StringBuilder sb = new StringBuilder();
-        Random random = new Random();
+        Random random = new SecureRandom();
         for (int i = 0; i < length; i++) {
             sb.append(LETTER_CHAR.charAt(random.nextInt(LETTER_CHAR.length())));
         }
@@ -128,13 +132,14 @@ public class RandomUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println("数字：" + generateNumber(6));
-        System.out.println("数字、大小写：" + generateString(15));
-        System.out.println("大小写：" + generateMixString(15));
-        System.out.println("小写：" + generateLowerString(15));
-        System.out.println("大写：" + generateUpperString(15));
-        System.out.println("零：" + generateZeroString(15));
-        System.out.println("补全：" + toFixdLengthString(123, 15));
-        System.out.println("补全：" + toFixdLengthString(123L, 15));
+        
+        log.info("数字：" + generateNumber(6));
+        log.info("数字、大小写：" + generateString(15));
+        log.info("大小写：" + generateMixString(15));
+        log.info("小写：" + generateLowerString(15));
+        log.info("大写：" + generateUpperString(15));
+        log.info("零：" + generateZeroString(15));
+        log.info("补全：" + toFixdLengthString(123, 15));
+        log.info("补全：" + toFixdLengthString(123L, 15));
     }
 }
