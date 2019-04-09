@@ -6,16 +6,17 @@
 - 代码生成器（CodeGenerator生成controller、service ？生成model、mapper ）
 - 集成MyBatis、通用Mapper插件、PageHelper分页插件，实现单表业务零SQL
 - 集成Druid数据库连接池与监控
-- 统一异常处理
 - 日志拦截、登录拦截
+- 统一异常处理
 - 统一响应结果封装
+- 统一的API接口文档
 - 常用工具类
 - 其他
  
 ## 快速开始
   1. 克隆项目
   2. 创建表 （可以使用```test resources```目录下的```demo-user.sql```）
-  3. 修改数据库连接 ```CodeGenerator```、```generatorConfig.xml```、```application.yml```
+  3. 修改数据库连接 ```CodeGenerator```、```generatorConfig.xml```、```application-local.yml```
   4. 指定要生成的表```CodeGenerator.main()``` 
   4. ```mvn mybatis-generator:generate``` &  运行```CodeGenerator.main()```方法生成代码
   5. 启动项目 访问 [http://localhost/doc.html](http://localhost/doc.html)
@@ -31,7 +32,7 @@
 ## 技术选型 & 文档
 - [Spring Boot](http://www.jianshu.com/p/1a9fd8936bd8)
 - [MyBatis](http://www.mybatis.org/mybatis-3/zh/index.html)
-- [MyBatisb通用Mapper插件](https://github.com/abel533/Mapper)
+- [MyBatisb 通用Mapper插件](https://github.com/abel533/Mapper)
 - [MyBatis PageHelper分页插件](https://github.com/pagehelper/Mybatis-PageHelper)
 - [Druid Spring Boot Starter](https://github.com/alibaba/druid/tree/master/druid-spring-boot-starter/)
 - 其他
