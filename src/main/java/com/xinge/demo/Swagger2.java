@@ -1,7 +1,7 @@
 package com.xinge.demo;
 
 import com.google.common.collect.Sets;
-import com.xinge.demo.model.entity.SuccessResult;
+import com.xinge.demo.core.entity.SuccessResult;
 import org.apache.http.HttpStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

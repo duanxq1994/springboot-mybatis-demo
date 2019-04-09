@@ -18,7 +18,7 @@
   3. 修改数据库连接 ```CodeGenerator```、```generatorConfig.xml```、```application.yml```
   4. 指定要生成的表```CodeGenerator.main()``` 
   4. ```mvn mybatis-generator:generate``` &  运行```CodeGenerator.main()```方法生成代码
-  5. 启动项目 
+  5. 启动项目 访问 [http://localhost/doc.html](http://localhost/doc.html)
   
 ## 开发建议
 - 表名小写，多个单词使用下划线分隔
@@ -31,7 +31,7 @@
 ## 技术选型 & 文档
 - [Spring Boot](http://www.jianshu.com/p/1a9fd8936bd8)
 - [MyBatis](http://www.mybatis.org/mybatis-3/zh/index.html)
-- [MyBatisb通用Mapper插件](https://github.com/abel533/MyBatis-Spring-Boot)
+- [MyBatisb通用Mapper插件](https://github.com/abel533/Mapper)
 - [MyBatis PageHelper分页插件](https://github.com/pagehelper/Mybatis-PageHelper)
 - [Druid Spring Boot Starter](https://github.com/alibaba/druid/tree/master/druid-spring-boot-starter/)
 - 其他
