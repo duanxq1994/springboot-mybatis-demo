@@ -6,6 +6,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,13 +33,26 @@ public class RequestUtil {
     public static HttpServletRequest getRequest() {
         try {
             ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-            if (attr != null) {
-                return attr.getRequest();
-            }
+            return attr.getRequest();
         } catch (Exception e) {
             log.error("", e);
+            throw new UnsupportedOperationException();
         }
-        return null;
+    }
+
+    /**
+     * 静态取response，本地junit非容器运行时无法使用，服务未启动完成无法使用
+     *
+     * @return
+     */
+    public static HttpServletResponse getResponse() {
+        try {
+            ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+            return attr.getResponse();
+        } catch (Exception e) {
+            log.error("", e);
+            throw new UnsupportedOperationException();
+        }
     }
 
     /**
