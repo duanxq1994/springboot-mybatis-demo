@@ -1,5 +1,5 @@
 server:
-    port: 8061
+    port: 80
     context-path: /
     session:
       timeout: 1800
@@ -55,5 +55,5 @@ pagehelper:
   support-methods-arguments: 'false'
   params: pageNum=pageNum;pageSize=PageSize;
 
-  dozer:
-    mapping-files: dozer-mapping.xml
+dozer:
+  mapping-files: dozer-mapping.xml
