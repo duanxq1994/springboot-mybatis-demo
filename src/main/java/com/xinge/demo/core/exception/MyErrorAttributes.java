@@ -22,7 +22,9 @@ public class MyErrorAttributes extends DefaultErrorAttributes {
         resultEntity.setCode((Integer) errorAttributes.get("status"));
         resultEntity.setMessage((String) errorAttributes.get("error"));
         resultEntity.setError((String) errorAttributes.get("exception"));
-        return MapUtil.beanToMap(resultEntity);
+        Map<String, Object> map = MapUtil.beanToMap(resultEntity);
+        map.putAll(errorAttributes);
+        return map;
     }
 
     @Override
