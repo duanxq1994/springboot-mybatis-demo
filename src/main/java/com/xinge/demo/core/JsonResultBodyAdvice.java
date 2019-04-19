@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  * 通用json结果返回处理
  * @author duanxq
  */
-@ControllerAdvice(basePackages = "com.xinge.demo.web.controller")
+@ControllerAdvice(basePackages = "com.xinge.demo.web")
 @Order(0)
 public class JsonResultBodyAdvice implements ResponseBodyAdvice<Object> {
 
