@@ -15,11 +15,12 @@
  
 ## 快速开始
   1. 克隆项目
-  2. 创建表 （可以使用```test resources```目录下的```demo-user.sql```）
-  3. 修改数据库连接 ```CodeGenerator```、```generatorConfig.xml```、```application-local.yml```
-  4. 指定要生成的表```CodeGenerator.main()``` 
-  4. ```mvn mybatis-generator:generate``` &  运行```CodeGenerator.main()```方法生成代码
-  5. 启动项目 访问 [http://localhost/doc.html](http://localhost/doc.html)
+  2. 启动项目（用户启动内置数据库）
+  3. ```mvn mybatis-generator:generate``` &  运行```CodeGenerator.main()```方法生成代码
+  4. 启动项目 访问 [http://localhost/doc.html](http://localhost/doc.html)
+  
+
+![效果](https://github.com/duanxq1994/springboot-mybatis-demo/tree/master/image/example.png)
   
 ## 开发建议
 - 表名小写，多个单词使用下划线分隔
