@@ -24,11 +24,13 @@ spring:
             web-stat-filter:
               url-pattern: /*
               exclusions: '*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*'
+              enabled: true
             stat-view-servlet:
               url-pattern: /druid/*
               reset-enable: false
               login-username: admin
               login-password: 123456
+              enabled: false
             break-after-acquire-failure: true
     http:
           multipart:
