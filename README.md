@@ -20,7 +20,7 @@
   4. 启动项目 访问 [http://localhost/doc.html](http://localhost/doc.html)
   
 
-![效果](https://github.com/duanxq1994/springboot-mybatis-demo/tree/master/image/example.png)
+![效果](https://github.com/duanxq1994/springboot-mybatis-demo/blob/master/image/example.png?raw=true)
   
 ## 开发建议
 - 表名小写，多个单词使用下划线分隔
