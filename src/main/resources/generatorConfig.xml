@@ -14,8 +14,8 @@
             <property name="swagger" value="true"/>
         </plugin>
 
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/test"
+        <jdbcConnection driverClass="org.h2.Driver"
+                        connectionURL="jdbc:h2:tcp://localhost/~/.h2/testdb"
                         userId="root"
                         password="123456">
         </jdbcConnection>
@@ -27,9 +27,9 @@
         <javaClientGenerator targetPackage="com.xinge.demo.mapper" targetProject="src/main/java"
                              type="XMLMAPPER"/>
 
-        <table tableName="%">
+        <table tableName="user">
             <!-- 使用数据库字段原始名字生成属性，false则使用驼峰命名法 -->
-            <property name="useActualColumnNames" value="true" />
+            <property name="useActualColumnNames" value="false" />
         </table>
     </context>
 </generatorConfiguration>  

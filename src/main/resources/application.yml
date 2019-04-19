@@ -45,11 +45,9 @@ mybatis:
 mapper:
     mappers: com.xinge.demo.common.util.MyMapper
     not-empty: false
-    identity: MYSQL
     style: normal
 
 pagehelper:
-  helper-dialect: mysql
   page-size-zero: 'true'
   reasonable: 'false'
   support-methods-arguments: 'false'
