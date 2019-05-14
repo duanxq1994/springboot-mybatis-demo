@@ -1,9 +1,7 @@
 package ${basePackage}.service;
 
-import ${basePackage}.model.${modelNameUpperCamel};
-import ${basePackage}.core.entity.BatchResultDTO;
 import ${basePackage}.core.IService;
-import tk.mybatis.mapper.entity.Example;
+import ${basePackage}.model.${modelNameUpperCamel};
 
 import java.util.List;
 
