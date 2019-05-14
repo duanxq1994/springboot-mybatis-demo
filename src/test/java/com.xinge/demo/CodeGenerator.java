@@ -1,20 +1,11 @@
 package com.xinge.demo;
 
-import com.google.common.base.CaseFormat;
-import freemarker.template.TemplateExceptionHandler;
-import org.apache.commons.lang3.StringUtils;
 import org.mybatis.generator.api.MyBatisGenerator;
-import org.mybatis.generator.config.*;
+import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.xml.ConfigurationParser;
 import org.mybatis.generator.internal.DefaultShellCallback;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-
-import static com.xinge.demo.ProjectConstant.*;
+import java.util.ArrayList;
 
 
 /**
@@ -22,162 +13,24 @@ import static com.xinge.demo.ProjectConstant.*;
  */
 public class CodeGenerator {
 
-    private static final String PROJECT_PATH = System.getProperty("user.dir");//项目在硬盘上的基础路径
-    private static final String TEMPLATE_FILE_PATH = PROJECT_PATH + "/src/test/resources/template";//模板位置
+    private static Configuration config;
 
-    private static final String JAVA_PATH = "/src/main/java"; //java文件路径
-
-    private static final String PACKAGE_PATH_SERVICE = packageConvertPath(SERVICE_PACKAGE);//生成的Service存放路径
-    private static final String PACKAGE_PATH_SERVICE_IMPL = packageConvertPath(SERVICE_IMPL_PACKAGE);//生成的Service实现存放路径
-    private static final String PACKAGE_PATH_CONTROLLER = packageConvertPath(CONTROLLER_PACKAGE);//生成的Controller存放路径
-
-    private static final String AUTHOR = "author";//@author
-    private static final String DATE = new SimpleDateFormat("yyyy/MM/dd").format(new Date());//@date
+    static {
+        try {
+            config = new ConfigurationParser(new ArrayList<String>()).parseConfiguration(CodeGenerator.class.getResourceAsStream("/generatorConfig.xml"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void main(String[] args) {
-        genCode("user");
-    }
-
-    /**
-     * 通过数据表名称生成代码，Model 名称通过解析数据表名称获得，下划线转大驼峰的形式。
-     * 如输入表名称 "t_user_detail" 将生成 TUserDetail、TUserDetailMapper、TUserDetailService ...
-     * @param tableNames 数据表名称...
-     */
-    private static void genCode(String... tableNames) {
-        for (String tableName : tableNames) {
-            genCodeByCustomModelName(tableName, null);
-        }
-    }
-
-    /**
-     * 通过数据表名称，和自定义的 Model 名称生成代码
-     * 如输入表名称 "t_user_detail" 和自定义的 Model 名称 "User" 将生成 User、UserMapper、UserService ...
-     * @param tableName 数据表名称
-     * @param modelName 自定义的 Model 名称
-     */
-    private static void genCodeByCustomModelName(String tableName, String modelName) {
-        genModelAndMapper(tableName, modelName);
-        genService(tableName, modelName);
-        genController(tableName, modelName);
-    }
-
-
-    private static void genModelAndMapper(String tableName, String modelName) {
-        //读取文件
-        File configFile = new File(CodeGenerator.class.getResource("/generatorConfig.xml").getFile());
-        List<String> warnings = new ArrayList<String>();
-        ConfigurationParser cp = new ConfigurationParser(warnings);
-        Configuration config;
         //true:覆盖生成
         DefaultShellCallback callback = new DefaultShellCallback(true);
-        MyBatisGenerator generator;
         try {
-            config = cp.parseConfiguration(configFile);
-            generator = new MyBatisGenerator(config, callback, warnings);
-            generator.generate(null);
+            new MyBatisGenerator(config, callback, new ArrayList<String>()).generate(null);
         } catch (Exception e) {
-            throw new RuntimeException("生成Model和Mapper失败", e);
+            throw new RuntimeException("生成失败", e);
         }
-        if (generator.getGeneratedJavaFiles().isEmpty() || generator.getGeneratedXmlFiles().isEmpty()) {
-            throw new RuntimeException("生成Model和Mapper失败：" + warnings);
-        }
-        Context context = config.getContexts().get(0);
-        List<TableConfiguration> tableConfigurations = context.getTableConfigurations();
-        for (TableConfiguration tableConfiguration : tableConfigurations) {
-            modelName = StringUtils.defaultIfEmpty(modelName, tableNameConvertUpperCamel(tableConfiguration.getTableName()));
-            System.out.println(modelName + ".java 生成成功");
-            System.out.println(modelName + "Mapper.java 生成成功");
-            System.out.println(modelName + "Mapper.xml 生成成功");
-        }
-    }
-
-    private static void genService(String tableName, String modelName) {
-        try {
-            freemarker.template.Configuration cfg = getConfiguration();
-
-            Map<String, Object> data = new HashMap<>();
-            data.put("date", DATE);
-            data.put("author", AUTHOR);
-            String modelNameUpperCamel = StringUtils.isEmpty(modelName) ? tableNameConvertUpperCamel(tableName) : modelName;
-            data.put("modelNameUpperCamel", modelNameUpperCamel);
-            data.put("modelNameLowerCamel", tableNameConvertLowerCamel(tableName));
-            data.put("basePackage", BASE_PACKAGE);
-
-            File file = new File(PROJECT_PATH + JAVA_PATH + PACKAGE_PATH_SERVICE + modelNameUpperCamel + "Service.java");
-            if (!file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
-            }
-            cfg.getTemplate("service.ftl").process(data,
-                    new FileWriter(file));
-            System.out.println(modelNameUpperCamel + "Service.java 生成成功");
-
-            File file1 = new File(PROJECT_PATH + JAVA_PATH + PACKAGE_PATH_SERVICE_IMPL + modelNameUpperCamel + "ServiceImpl.java");
-            if (!file1.getParentFile().exists()) {
-                file1.getParentFile().mkdirs();
-            }
-            cfg.getTemplate("service-impl.ftl").process(data,
-                    new FileWriter(file1));
-            System.out.println(modelNameUpperCamel + "ServiceImpl.java 生成成功");
-        } catch (Exception e) {
-            throw new RuntimeException("生成Service失败", e);
-        }
-    }
-
-    private static void genController(String tableName, String modelName) {
-        try {
-            freemarker.template.Configuration cfg = getConfiguration();
-
-            Map<String, Object> data = new HashMap<>();
-            data.put("date", DATE);
-            data.put("author", AUTHOR);
-            String modelNameUpperCamel = StringUtils.isEmpty(modelName) ? tableNameConvertUpperCamel(tableName) : modelName;
-            data.put("baseRequestMapping", modelNameConvertMappingPath(modelNameUpperCamel));
-            data.put("modelNameUpperCamel", modelNameUpperCamel);
-            data.put("modelNameLowerCamel", CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, modelNameUpperCamel));
-            data.put("basePackage", BASE_PACKAGE);
-
-            File file = new File(PROJECT_PATH + JAVA_PATH + PACKAGE_PATH_CONTROLLER + modelNameUpperCamel + "Controller.java");
-            if (!file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
-            }
-            cfg.getTemplate("controller-restful.ftl").process(data, new FileWriter(file));
-
-            System.out.println(modelNameUpperCamel + "Controller.java 生成成功");
-        } catch (Exception e) {
-            throw new RuntimeException("生成Controller失败", e);
-        }
-
-    }
-
-    private static freemarker.template.Configuration getConfiguration() throws IOException {
-        freemarker.template.Configuration cfg = new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_23);
-        cfg.setDirectoryForTemplateLoading(new File(TEMPLATE_FILE_PATH));
-        cfg.setDefaultEncoding("UTF-8");
-        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.IGNORE_HANDLER);
-        return cfg;
-    }
-
-    private static String tableNameConvertLowerCamel(String tableName) {
-        return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, tableName.toLowerCase());
-    }
-
-    private static String tableNameConvertUpperCamel(String tableName) {
-        return CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, tableName.toLowerCase());
-
-    }
-
-    private static String tableNameConvertMappingPath(String tableName) {
-        tableName = tableName.toLowerCase();//兼容使用大写的表名
-        return "/" + (tableName.contains("_") ? tableName.replaceAll("_", "/") : tableName);
-    }
-
-    private static String modelNameConvertMappingPath(String modelName) {
-        String tableName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, modelName);
-        return tableNameConvertMappingPath(tableName);
-    }
-
-    private static String packageConvertPath(String packageName) {
-        return String.format("/%s/", packageName.contains(".") ? packageName.replaceAll("\\.", "/") : packageName);
     }
 
 }

@@ -1,4 +1,4 @@
-package com.xinge.demo.core;
+package com.xinge.demo.service;
 
 import com.xinge.demo.core.entity.BatchResultDTO;
 import tk.mybatis.mapper.entity.Example;

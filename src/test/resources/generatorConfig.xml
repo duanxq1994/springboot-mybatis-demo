@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+
+    <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+
+        <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
+            <property name="mappers" value="com.xinge.demo.common.util.MyMapper"/>
+            <property name="lombok" value="Data"/>
+            <property name="swagger" value="true"/>
+        </plugin>
+        <!--mapper接口-->
+        <plugin type="tk.mybatis.mapper.generator.TemplateFilePlugin">
+            <property name="targetProject" value="src/main/java"/>
+            <property name="basePackage" value="com.xinge.demo"/>
+            <property name="targetPackage" value="com.xinge.demo.mapper"/>
+            <property name="templatePath" value="template/mapper.ftl"/>
+            <property name="suffix" value="Mapper"/>
+            <property name="fileName" value="${tableClass.shortClassName}${suffix}.java"/>
+        </plugin>
+
+        <plugin type="tk.mybatis.mapper.generator.TemplateFilePlugin">
+            <property name="targetProject" value="src/main/java"/>
+            <property name="targetPackage" value="com.xinge.demo.service"/>
+            <property name="templatePath" value="template/service.ftl"/>
+            <property name="suffix" value="Service"/>
+            <property name="fileName" value="${tableClass.shortClassName}${suffix}.java"/>
+        </plugin>
+
+        <plugin type="tk.mybatis.mapper.generator.TemplateFilePlugin">
+            <property name="targetProject" value="src/main/java"/>
+            <property name="basePackage" value="com.xinge.demo"/>
+            <property name="targetPackage" value="com.xinge.demo.service.impl"/>
+            <property name="templatePath" value="template/service-impl.ftl"/>
+            <property name="suffix" value="ServiceImpl"/>
+            <property name="fileName" value="${tableClass.shortClassName}${suffix}.java"/>
+        </plugin>
+
+        <plugin type="tk.mybatis.mapper.generator.TemplateFilePlugin">
+            <property name="targetProject" value="src/main/java"/>
+            <property name="basePackage" value="com.xinge.demo"/>
+            <property name="targetPackage" value="com.xinge.demo.web"/>
+            <property name="templatePath" value="template/controller-restful.ftl"/>
+            <property name="suffix" value="Controller"/>
+            <property name="fileName" value="${tableClass.shortClassName}${suffix}.java"/>
+        </plugin>
+
+        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
+                        connectionURL="jdbc:mysql://localhost:3306/testdb?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;tinyInt1isBit=false"
+                        userId="root"
+                        password="123456" />
+
+        <javaModelGenerator targetPackage="com.xinge.demo.model" targetProject="src/main/java"/>
+
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
+
+        <javaClientGenerator targetPackage="com.xinge.demo.mapper" targetProject="src/main/java"
+                             type="XMLMAPPER"/>
+
+        <table tableName="%">
+            <!-- 使用数据库字段原始名字生成属性，false则使用驼峰命名法 -->
+            <property name="useActualColumnNames" value="false" />
+        </table>
+    </context>
+</generatorConfiguration>  

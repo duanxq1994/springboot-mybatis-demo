@@ -1,15 +1,13 @@
-package ${basePackage}.service;
+package ${targetPackage};
 
-import ${basePackage}.core.IService;
-import ${basePackage}.model.${modelNameUpperCamel};
+import ${tableClass.fullClassName};
 
-import java.util.List;
 
 /**
- * @author ${author}
- * Created by ${author} on ${date}.
+ * @author duanxq
+ * Created by duanxq on ${.now?string('yyyy-MM-hh')}.
  */
-public interface ${modelNameUpperCamel}Service extends IService<${modelNameUpperCamel}> {
+public interface ${tableClass.shortClassName}${suffix} extends IService<${tableClass.shortClassName}> {
 
 
 }

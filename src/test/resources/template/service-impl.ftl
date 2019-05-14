@@ -1,17 +1,16 @@
-package ${basePackage}.service.impl;
+package ${targetPackage};
 
-import ${basePackage}.core.BaseService;
-import ${basePackage}.model.${modelNameUpperCamel};
-import ${basePackage}.service.${modelNameUpperCamel}Service;
+import ${tableClass.fullClassName};
+import ${basePackage}.service.${tableClass.shortClassName}Service;
 import org.springframework.stereotype.Service;
 
 
 /**
- * @author ${author}
- * Created by ${author} on ${date}.
+ * @author duanxq
+ * Created by duanxq on ${.now?string('yyyy-MM-hh')}.
  */
 @Service
-public class ${modelNameUpperCamel}ServiceImpl extends BaseService<${modelNameUpperCamel}> implements ${modelNameUpperCamel}Service {
+public class ${tableClass.shortClassName}${suffix} extends BaseService<${tableClass.shortClassName}> implements ${tableClass.shortClassName}Service {
 
 
 }

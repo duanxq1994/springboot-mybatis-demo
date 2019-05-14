@@ -1,51 +1,59 @@
-package ${basePackage}.web;
+package ${targetPackage};
 
 import com.github.pagehelper.PageHelper;
 import ${basePackage}.core.entity.BatchResultDTO;
 import ${basePackage}.core.entity.SuccessResult;
-import ${basePackage}.model.${modelNameUpperCamel};
-import ${basePackage}.service.${modelNameUpperCamel}Service;
+import ${tableClass.fullClassName};
+import ${basePackage}.service.${tableClass.shortClassName}Service;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
 /**
- * @author ${author}
- * Created by ${author} on ${date}.
+ * @author duanxq
+ * Created by duanxq on ${.now?string('yyyy-MM-hh')}.
  */
+@Api(tags = "${tableClass.shortClassName}")
 @RestController
-@RequestMapping("${baseRequestMapping}")
-public class ${modelNameUpperCamel}Controller {
+@RequestMapping("${tableClass.lowerCaseName}")
+public class ${tableClass.shortClassName}${suffix} {
 
     @Resource
-    private ${modelNameUpperCamel}Service ${modelNameLowerCamel}Service;
+    private ${tableClass.shortClassName}Service ${tableClass.lowerCaseName}Service;
 
+    @ApiOperation("添加")
     @PostMapping("add")
-    public SuccessResult add(@RequestBody ${modelNameUpperCamel} ${modelNameLowerCamel}) {
-        ${modelNameLowerCamel}Service.add(${modelNameLowerCamel});
+    public SuccessResult add(@RequestBody ${tableClass.shortClassName} ${tableClass.lowerCaseName}) {
+        ${tableClass.lowerCaseName}Service.add(${tableClass.lowerCaseName});
         return new SuccessResult();
     }
 
+    @ApiOperation("删除")
     @PostMapping("delete/{id}")
     public SuccessResult delete(@PathVariable Integer id) {
-        ${modelNameLowerCamel}Service.del(id);
+        ${tableClass.lowerCaseName}Service.del(id);
         return new SuccessResult();
     }
 
+    @ApiOperation("更新")
     @PostMapping("update")
-    public SuccessResult update(@RequestBody ${modelNameUpperCamel} ${modelNameLowerCamel}) {
-        ${modelNameLowerCamel}Service.editByPK(${modelNameLowerCamel});
+    public SuccessResult update(@RequestBody ${tableClass.shortClassName} ${tableClass.lowerCaseName}) {
+        ${tableClass.lowerCaseName}Service.editByPK(${tableClass.lowerCaseName});
         return new SuccessResult();
     }
 
+    @ApiOperation("详情")
     @GetMapping("detail/{id}")
-    public ${modelNameUpperCamel} detail(@PathVariable Integer id) {
-        return ${modelNameLowerCamel}Service.queryByPK(id);
+    public ${tableClass.shortClassName} detail(@PathVariable Integer id) {
+        return ${tableClass.lowerCaseName}Service.queryByPK(id);
     }
 
+    @ApiOperation("列表")
     @GetMapping("list")
-    public BatchResultDTO<${modelNameUpperCamel}> list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
+    public BatchResultDTO<${tableClass.shortClassName}> list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
         PageHelper.startPage(page, size);
-        return new BatchResultDTO<>(${modelNameLowerCamel}Service.queryForList(new ${modelNameUpperCamel}()));
+        return new BatchResultDTO<>(${tableClass.lowerCaseName}Service.queryForList(new ${tableClass.shortClassName}()));
     }
 }

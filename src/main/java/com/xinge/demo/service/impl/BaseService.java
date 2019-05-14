@@ -1,10 +1,11 @@
-package com.xinge.demo.core;
+package com.xinge.demo.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xinge.demo.common.util.MyMapper;
 import com.xinge.demo.core.entity.BatchResultDTO;
 import com.xinge.demo.core.entity.PageDO;
+import com.xinge.demo.service.IService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
