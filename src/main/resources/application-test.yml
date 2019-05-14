@@ -5,13 +5,14 @@ server:
       basedir: tmp
 spring:
     datasource:
-        url:
-        username:
-        password:
-        driver-class-name:
+        url: jdbc:p6spy:mysql://localhost:3306/testdb?&useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&tinyInt1isBit=false
+        username: root
+        password: 123456
+        driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+        druid:
+          db-type: mysql
 
 logging:
     level:
         root: info
-        com.xinge.demo: debug
 

@@ -30,13 +30,16 @@ spring:
               reset-enable: false
               login-username: admin
               login-password: 123456
-              enabled: false
+              enabled: true
             break-after-acquire-failure: true
     http:
           multipart:
             max-file-size: 20MB
     mvc:
       throw-exception-if-no-handler-found: true
+    jackson:
+      date-format: yyyy-MM-dd HH:mm:ss
+      time-zone: GMT+8
 
 
 
