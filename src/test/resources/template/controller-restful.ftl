@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 
 /**
-* Created by ${author} on ${date}.
-*/
+ * @author ${author}
+ * Created by ${author} on ${date}.
+ */
 @RestController
 @RequestMapping("${baseRequestMapping}")
 public class ${modelNameUpperCamel}Controller {

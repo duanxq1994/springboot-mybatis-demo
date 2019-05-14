@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 
 /**
+ * @author ${author}
  * Created by ${author} on ${date}.
  */
 @Service
