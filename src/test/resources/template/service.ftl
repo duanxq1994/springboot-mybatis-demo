@@ -18,6 +18,7 @@ public interface ${modelNameUpperCamel}Service extends IService<${modelNameUpper
      * @param obj
      * @return
      */
+    @Override
     void add(${modelNameUpperCamel} obj);
 
     /**
@@ -26,6 +27,7 @@ public interface ${modelNameUpperCamel}Service extends IService<${modelNameUpper
      * @param key
      * @return
      */
+    @Override
     void del(Object key);
 
     /**
@@ -34,6 +36,7 @@ public interface ${modelNameUpperCamel}Service extends IService<${modelNameUpper
      * @param obj
      * @return
      */
+    @Override
     void editByPK(${modelNameUpperCamel} obj);
 
     /**
@@ -42,6 +45,7 @@ public interface ${modelNameUpperCamel}Service extends IService<${modelNameUpper
      * @param obj     需要编辑的内容
      * @param example 编辑条件
      */
+    @Override
     void editByExample(${modelNameUpperCamel} obj, Example example);
 
     /**
@@ -50,6 +54,7 @@ public interface ${modelNameUpperCamel}Service extends IService<${modelNameUpper
      * @param key
      * @return
      */
+    @Override
     ${modelNameUpperCamel} queryByPK(Object key);
 
     /**
@@ -58,6 +63,7 @@ public interface ${modelNameUpperCamel}Service extends IService<${modelNameUpper
      * @param obj
      * @return
      */
+    @Override
     List<${modelNameUpperCamel}> queryForList(${modelNameUpperCamel} obj);
 
     /**
@@ -65,6 +71,7 @@ public interface ${modelNameUpperCamel}Service extends IService<${modelNameUpper
     * @param obj
     * @return
     */
+    @Override
     Integer queryForCount(${modelNameUpperCamel} obj);
 
     /**
@@ -73,6 +80,7 @@ public interface ${modelNameUpperCamel}Service extends IService<${modelNameUpper
     * @param obj
     * @return
     */
+    @Override
     BatchResultDTO<${modelNameUpperCamel}> queryForPageList(${modelNameUpperCamel} obj);
 
 

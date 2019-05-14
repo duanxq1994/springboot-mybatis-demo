@@ -37,7 +37,7 @@ public class ${modelNameUpperCamel}Controller {
         return new SuccessResult();
     }
 
-    @GetMapping("detail")
+    @GetMapping("detail/{id}")
     public ${modelNameUpperCamel} detail(@PathVariable Integer id) {
         return ${modelNameLowerCamel}Service.queryByPK(id);
     }
