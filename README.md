@@ -3,8 +3,8 @@
 基于Spring Boot & MyBatis的项目，用于快速构建中小型Restful API项目，减少重复劳动，专注于业务代码的编写。
 
 ## 特征 & 提供
-- 代码生成器（CodeGenerator生成controller、service ？生成model、mapper ）
-- 集成MyBatis、通用Mapper插件、PageHelper分页插件，实现单表业务零SQL
+- 代码生成器（CodeGenerator生成controller、service、model、mapper ）
+- 集成MyBatis、通用Mapper插件、PageHelper分页插件，实现单表零SQL
 - 集成Druid数据库连接池与监控
 - 日志拦截、登录拦截
 - 统一异常处理
@@ -15,9 +15,9 @@
  
 ## 快速开始
   1. 克隆项目
-  2. 启动项目（用户启动内置数据库）
-  3. ```mvn mybatis-generator:generate``` &  运行```CodeGenerator.main()```方法生成代码
-  4. 启动项目 访问 [http://localhost/doc.html](http://localhost/doc.html)
+  2. 启动项目（用于启动内置数据库）
+  3. 运行```CodeGenerator.main()```方法生成代码
+  4. 重启项目 访问 [http://localhost/doc.html](http://localhost/doc.html)
   
 
 ![效果](https://github.com/duanxq1994/springboot-mybatis-demo/blob/master/image/example.png?raw=true)
