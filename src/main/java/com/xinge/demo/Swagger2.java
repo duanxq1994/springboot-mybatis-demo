@@ -2,6 +2,7 @@ package com.xinge.demo;
 
 import com.google.common.collect.Sets;
 import com.xinge.demo.core.entity.SuccessResult;
+import io.swagger.annotations.ApiOperation;
 import org.apache.http.HttpStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,7 +47,7 @@ public class Swagger2 {
                 .globalResponseMessage(RequestMethod.PUT, responseMessageList)
                 .globalResponseMessage(RequestMethod.DELETE, responseMessageList)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage(Swagger2.class.getPackage().getName()))
+                .apis(RequestHandlerSelectors.withMethodAnnotation(ApiOperation.class))
                 .paths(PathSelectors.any())
                 .build().apiInfo(apiInfo());
     }
