@@ -1,13 +1,14 @@
 package ${targetPackage};
 
-import com.github.pagehelper.PageHelper;
 import ${basePackage}.core.entity.BatchResultDTO;
+import ${basePackage}.core.entity.PageDO;
 import ${basePackage}.core.entity.SuccessResult;
 import ${tableClass.fullClassName};
 import ${basePackage}.service.${tableClass.shortClassName}Service;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.Resource;
 
@@ -32,7 +33,7 @@ public class ${tableClass.shortClassName}${suffix} {
 
     @ApiOperation("删除")
     @PostMapping("delete/{id}")
-    public SuccessResult delete(@PathVariable Integer id) {
+    public SuccessResult delete(@ApiIgnore @PathVariable Integer id) {
         ${tableClass.lowerCaseName}Service.del(id);
         return new SuccessResult();
     }
@@ -46,14 +47,13 @@ public class ${tableClass.shortClassName}${suffix} {
 
     @ApiOperation("详情")
     @GetMapping("detail/{id}")
-    public ${tableClass.shortClassName} detail(@PathVariable Integer id) {
+    public ${tableClass.shortClassName} detail(@ApiIgnore @PathVariable Integer id) {
         return ${tableClass.lowerCaseName}Service.queryByPK(id);
     }
 
     @ApiOperation("列表")
     @GetMapping("list")
-    public BatchResultDTO<${tableClass.shortClassName}> list(@RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "0") Integer size) {
-        PageHelper.startPage(page, size);
-        return new BatchResultDTO<>(${tableClass.lowerCaseName}Service.queryForList(new ${tableClass.shortClassName}()));
+    public BatchResultDTO<${tableClass.shortClassName}> list(PageDO pageDO) {
+        return ${tableClass.lowerCaseName}Service.queryForPageList(new ${tableClass.shortClassName}(), pageDO);
     }
 }

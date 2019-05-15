@@ -1,5 +1,6 @@
 package com.xinge.demo;
 
+import com.alibaba.fastjson.JSON;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.xml.ConfigurationParser;
@@ -27,7 +28,11 @@ public class CodeGenerator {
         //true:覆盖生成
         DefaultShellCallback callback = new DefaultShellCallback(true);
         try {
-            new MyBatisGenerator(config, callback, new ArrayList<String>()).generate(null);
+            ArrayList<String> warning = new ArrayList<>();
+            new MyBatisGenerator(config, callback, warning).generate(null);
+            if (!warning.isEmpty()) {
+                System.out.println(JSON.toJSONString(warning));
+            }
         } catch (Exception e) {
             throw new RuntimeException("生成失败", e);
         }
