@@ -2,7 +2,6 @@ package com.xinge.demo.service.impl;
 
 import com.github.pagehelper.PageHelper;
 import com.xinge.demo.common.util.MyMapper;
-import com.xinge.demo.core.entity.BatchResultDTO;
 import com.xinge.demo.core.entity.PageDO;
 import com.xinge.demo.service.IService;
 import org.slf4j.Logger;
@@ -109,9 +108,9 @@ public abstract class BaseService<T> implements IService<T> {
      * @return
      */
     @Override
-    public BatchResultDTO<T> queryForPageList(T obj, PageDO pageDO) {
+    public List<T> queryForPageList(T obj, PageDO pageDO) {
         PageHelper.startPage(pageDO.getPageNum(), pageDO.getPageSize());
-        return BatchResultDTO.of(mapper.select(obj));
+        return mapper.select(obj);
     }
 
 

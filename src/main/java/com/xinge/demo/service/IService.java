@@ -1,6 +1,5 @@
 package com.xinge.demo.service;
 
-import com.xinge.demo.core.entity.BatchResultDTO;
 import com.xinge.demo.core.entity.PageDO;
 import tk.mybatis.mapper.entity.Example;
 
@@ -75,6 +74,6 @@ public interface IService<T> {
      * @param pageDO
      * @return
      */
-    BatchResultDTO<T> queryForPageList(T obj, PageDO pageDO);
+    List<T> queryForPageList(T obj, PageDO pageDO);
 
 }

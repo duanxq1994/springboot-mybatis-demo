@@ -11,7 +11,16 @@
         <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
             <property name="mappers" value="com.xinge.demo.common.util.MyMapper"/>
             <property name="lombok" value="Data"/>
-            <property name="swagger" value="true"/>
+        </plugin>
+        <!--vo-->
+        <plugin type="tk.mybatis.mapper.generator.TemplateFilePlugin">
+            <property name="targetProject" value="src/main/java"/>
+            <property name="basePackage" value="com.xinge.demo"/>
+            <property name="targetPackage" value="com.xinge.demo.vo"/>
+            <property name="templatePath" value="template/vo.ftl"/>
+            <property name="suffix" value="VO"/>
+            <property name="fileName" value="${tableClass.shortClassName}${suffix}.java"/>
+            <property name="templateFormatter" value="tk.mybatis.mapper.generator.formatter.FreemarkerTemplateFormatter"/>
         </plugin>
         <!--Mapper-->
         <plugin type="tk.mybatis.mapper.generator.TemplateFilePlugin">
@@ -21,7 +30,6 @@
             <property name="templatePath" value="template/mapper.ftl"/>
             <property name="suffix" value="Mapper"/>
             <property name="fileName" value="${tableClass.shortClassName}${suffix}.java"/>
-            <!--默认值是下面这个，可以不配置-->
             <property name="templateFormatter" value="tk.mybatis.mapper.generator.formatter.FreemarkerTemplateFormatter"/>
         </plugin>
         <!--Service-->
@@ -31,7 +39,6 @@
             <property name="templatePath" value="template/service.ftl"/>
             <property name="suffix" value="Service"/>
             <property name="fileName" value="${tableClass.shortClassName}${suffix}.java"/>
-            <!--默认值是下面这个，可以不配置-->
             <property name="templateFormatter" value="tk.mybatis.mapper.generator.formatter.FreemarkerTemplateFormatter"/>
         </plugin>
 
@@ -43,7 +50,6 @@
             <property name="templatePath" value="template/service-impl.ftl"/>
             <property name="suffix" value="ServiceImpl"/>
             <property name="fileName" value="${tableClass.shortClassName}${suffix}.java"/>
-            <!--默认值是下面这个，可以不配置-->
             <property name="templateFormatter" value="tk.mybatis.mapper.generator.formatter.FreemarkerTemplateFormatter"/>
         </plugin>
 
@@ -55,7 +61,6 @@
             <property name="templatePath" value="template/controller-restful.ftl"/>
             <property name="suffix" value="Controller"/>
             <property name="fileName" value="${tableClass.shortClassName}${suffix}.java"/>
-            <!--默认值是下面这个，可以不配置-->
             <property name="templateFormatter" value="tk.mybatis.mapper.generator.formatter.FreemarkerTemplateFormatter"/>
         </plugin>
 
