@@ -1,9 +1,7 @@
 package com.xinge.demo.core.entity;
 
-import com.github.pagehelper.Page;
-import lombok.Data;
+import com.github.pagehelper.PageSerializable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,30 +9,28 @@ import java.util.List;
  *
  * @author wgyi
  */
-@Data
-public class BatchResultDTO<T> {
+
+public class BatchResultDTO<T> extends PageSerializable<T> {
+
+    private static final long serialVersionUID = 1420295871173553373L;
 
     public BatchResultDTO() {
-        setCount(0L);
-        setModule(new ArrayList<T>());
+
     }
 
     public BatchResultDTO(List<T> list) {
-        if (list instanceof Page) {
-            setModule(((Page<T>) list).getResult());
-            setCount(((Page<T>) list).getTotal());
-        } else {
-            throw new UnsupportedOperationException();
-        }
+        super(list);
     }
 
-    public BatchResultDTO(List<T> list, long total) {
-        setModule(list);
-        setCount(total);
+    public static <T> BatchResultDTO<T> of(List<T> list){
+        return new BatchResultDTO<T>(list);
     }
 
-    private List<T> module;
-
-    private Long count;
-
+    @Override
+    public String toString() {
+        return "BatchResultDTO{" +
+                "total=" + total +
+                ", list=" + list +
+                '}';
+    }
 }

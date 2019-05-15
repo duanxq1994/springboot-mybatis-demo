@@ -1,6 +1,5 @@
 package com.xinge.demo.service.impl;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xinge.demo.common.util.MyMapper;
 import com.xinge.demo.core.entity.BatchResultDTO;
@@ -9,13 +8,11 @@ import com.xinge.demo.service.IService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.Assert;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
 
 /**
- *
  * @author duanxq
  * @date 2017/9/9
  */
@@ -96,6 +93,7 @@ public abstract class BaseService<T> implements IService<T> {
 
     /**
      * 根据条件count
+     *
      * @param obj
      * @return
      */
@@ -111,14 +109,9 @@ public abstract class BaseService<T> implements IService<T> {
      * @return
      */
     @Override
-    public BatchResultDTO<T> queryForPageList(T obj) {
-        Assert.isTrue(obj instanceof PageDO, String.format("%s need to extends pageDo", obj.getClass().getName()));
-        BatchResultDTO<T> resultDTO = new BatchResultDTO<>();
-        PageHelper.startPage(((PageDO)obj).getPageNum(), ((PageDO)obj).getPageSize());
-        Page<T> page = (Page<T>) mapper.select(obj);
-        resultDTO.setModule(page.getResult());
-        resultDTO.setCount(page.getTotal());
-        return resultDTO;
+    public BatchResultDTO<T> queryForPageList(T obj, PageDO pageDO) {
+        PageHelper.startPage(pageDO.getPageNum(), pageDO.getPageSize());
+        return BatchResultDTO.of(mapper.select(obj));
     }
 
 
