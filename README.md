@@ -3,7 +3,7 @@
 基于Spring Boot & MyBatis的项目，用于快速构建中小型Restful API项目，减少重复劳动，专注于业务代码的编写。
 
 ## 特征 & 提供
-- 代码生成器（CodeGenerator生成controller、service、model、mapper ）
+- 代码生成器（一键生成代码）
 - 集成MyBatis、通用Mapper插件、PageHelper分页插件，实现单表零SQL
 - 集成Druid数据库连接池与监控
 - 日志拦截、登录拦截
@@ -15,16 +15,16 @@
  
 ## 快速开始
   1. 克隆项目
-  2. 启动项目（用于启动内置数据库）
+  2. 修改 config.properties
   3. 运行```CodeGenerator.main()```方法生成代码
-  4. 重启项目 访问 [http://localhost/doc.html](http://localhost/doc.html)
+  4. 启动项目 访问 [http://localhost/doc.html](http://localhost/doc.html)
   
 
 ![效果](https://github.com/duanxq1994/springboot-mybatis-demo/blob/master/image/example.png?raw=true)
   
 ## 开发建议
 - 表名小写，多个单词使用下划线分隔
-- Model内成员变量与表字段对应，如需扩展成员变量（比如连表查询）创建DTO，否则需在扩展的成员变量上加```@Transient```注解
+- Model内成员变量DO与表字段对应，VO对外展示，DTO用于项目中信息的传输，之间使用dozer转换
 - 业务失败直接抛出```BizException("message")```，由统一异常处理器来封装业务失败的响应结果，比如```throw new BizException("该手机号已被注册")```
 - 需要工具类的话先从```apache-commons-*```和```guava```中找，没有再造轮子或引入类库，尽量精简项目
 - 开发规范遵循阿里巴巴Java开发手册（[最新版下载](https://github.com/alibaba/p3c))
