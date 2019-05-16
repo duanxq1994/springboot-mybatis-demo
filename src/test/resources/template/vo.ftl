@@ -14,16 +14,10 @@ import java.util.Date;
 @ApiModel("${tableClass.shortClassName}")
 public class ${tableClass.shortClassName}${suffix} {
 
-<#if tableClass.pkFields??>
-<#list tableClass.pkFields as field>
+<#if tableClass.allFields??>
+<#list tableClass.allFields as field>
     @ApiModelProperty("${field.remarks}")
-    private ${field.shortTypeName} ${dashedToCamel(field.columnName)};
-</#list>
-</#if>
-<#if tableClass.baseFields??>
-<#list tableClass.baseFields as field>
-    @ApiModelProperty("${field.remarks}")
-    private ${field.shortTypeName} ${dashedToCamel(field.columnName)};
+    private ${field.shortTypeName} ${field.fieldName};
 </#list>
 </#if>
 

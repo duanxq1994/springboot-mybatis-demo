@@ -4,20 +4,22 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
 <generatorConfiguration>
 
+    <properties resource="config.properties"/>
+
     <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
         <property name="beginningDelimiter" value="`"/>
         <property name="endingDelimiter" value="`"/>
 
         <plugin type="tk.mybatis.mapper.generator.MapperPlugin">
-            <property name="mappers" value="com.xinge.demo.common.util.MyMapper"/>
+            <property name="mappers" value="${package.base}.common.util.MyMapper"/>
             <property name="lombok" value="Data"/>
         </plugin>
         <!--vo-->
         <plugin type="tk.mybatis.mapper.generator.TemplateFilePlugin">
+            <property name="basePackage" value="${package.base}"/>
             <property name="targetProject" value="src/main/java"/>
-            <property name="basePackage" value="com.xinge.demo"/>
-            <property name="targetPackage" value="com.xinge.demo.vo"/>
-            <property name="templatePath" value="template/vo.ftl"/>
+            <property name="targetPackage" value="${package.vo}"/>
+            <property name="templatePath" value="${template.vo}"/>
             <property name="suffix" value="VO"/>
             <property name="fileName" value="${tableClass.shortClassName}${suffix}.java"/>
             <property name="templateFormatter" value="tk.mybatis.mapper.generator.formatter.FreemarkerTemplateFormatter"/>
@@ -25,9 +27,9 @@
         <!--Mapper-->
         <plugin type="tk.mybatis.mapper.generator.TemplateFilePlugin">
             <property name="targetProject" value="src/main/java"/>
-            <property name="basePackage" value="com.xinge.demo"/>
-            <property name="targetPackage" value="com.xinge.demo.mapper"/>
-            <property name="templatePath" value="template/mapper.ftl"/>
+            <property name="basePackage" value="${package.base}"/>
+            <property name="targetPackage" value="${package.mapper}"/>
+            <property name="templatePath" value="${template.mapper}"/>
             <property name="suffix" value="Mapper"/>
             <property name="fileName" value="${tableClass.shortClassName}${suffix}.java"/>
             <property name="templateFormatter" value="tk.mybatis.mapper.generator.formatter.FreemarkerTemplateFormatter"/>
@@ -35,8 +37,9 @@
         <!--Service-->
         <plugin type="tk.mybatis.mapper.generator.TemplateFilePlugin">
             <property name="targetProject" value="src/main/java"/>
-            <property name="targetPackage" value="com.xinge.demo.service"/>
-            <property name="templatePath" value="template/service.ftl"/>
+            <property name="basePackage" value="${package.base}"/>
+            <property name="targetPackage" value="${package.service}"/>
+            <property name="templatePath" value="${template.service}"/>
             <property name="suffix" value="Service"/>
             <property name="fileName" value="${tableClass.shortClassName}${suffix}.java"/>
             <property name="templateFormatter" value="tk.mybatis.mapper.generator.formatter.FreemarkerTemplateFormatter"/>
@@ -45,9 +48,9 @@
         <!--ServiceImpl-->
         <plugin type="tk.mybatis.mapper.generator.TemplateFilePlugin">
             <property name="targetProject" value="src/main/java"/>
-            <property name="basePackage" value="com.xinge.demo"/>
-            <property name="targetPackage" value="com.xinge.demo.service.impl"/>
-            <property name="templatePath" value="template/service-impl.ftl"/>
+            <property name="basePackage" value="${package.base}"/>
+            <property name="targetPackage" value="${package.service.impl}"/>
+            <property name="templatePath" value="${template.service.impl}"/>
             <property name="suffix" value="ServiceImpl"/>
             <property name="fileName" value="${tableClass.shortClassName}${suffix}.java"/>
             <property name="templateFormatter" value="tk.mybatis.mapper.generator.formatter.FreemarkerTemplateFormatter"/>
@@ -56,22 +59,22 @@
         <!--Controller-->
         <plugin type="tk.mybatis.mapper.generator.TemplateFilePlugin">
             <property name="targetProject" value="src/main/java"/>
-            <property name="basePackage" value="com.xinge.demo"/>
-            <property name="targetPackage" value="com.xinge.demo.web"/>
-            <property name="templatePath" value="template/controller-restful.ftl"/>
+            <property name="basePackage" value="${package.base}"/>
+            <property name="targetPackage" value="${package.controller}"/>
+            <property name="templatePath" value="${template.controller}"/>
             <property name="suffix" value="Controller"/>
             <property name="fileName" value="${tableClass.shortClassName}${suffix}.java"/>
             <property name="templateFormatter" value="tk.mybatis.mapper.generator.formatter.FreemarkerTemplateFormatter"/>
         </plugin>
 
-        <jdbcConnection driverClass="com.mysql.jdbc.Driver"
-                        connectionURL="jdbc:mysql://localhost:3306/testdb?useUnicode=true&amp;characterEncoding=utf8&amp;zeroDateTimeBehavior=convertToNull&amp;tinyInt1isBit=false"
-                        userId="root"
-                        password="123456" />
+        <jdbcConnection driverClass="${jdbc.driverClass}"
+                        connectionURL="${jdbc.url}"
+                        userId="${jdbc.user}"
+                        password="${jdbc.password}" />
 
-        <javaModelGenerator targetPackage="com.xinge.demo.model" targetProject="src/main/java"/>
+        <javaModelGenerator targetPackage="${package.model}" targetProject="src/main/java"/>
 
-        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
+        <sqlMapGenerator targetPackage="${package.mapper}" targetProject="src/main/resources"/>
 
         <table tableName="%">
             <!-- 使用数据库字段原始名字生成属性，false则使用驼峰命名法 -->
