@@ -15,9 +15,10 @@
  
 ## 快速开始
   1. 克隆项目
-  2. 修改 config.properties
-  3. 运行```CodeGenerator.main()```方法生成代码
-  4. 启动项目 访问 [http://localhost/doc.html](http://localhost/doc.html)
+  2. 执行 db/data.sql
+  3. 修改 application-local.yml、 config.properties中数据库用户、密码
+  4. 运行```CodeGenerator.main()```方法生成代码
+  5. 启动项目 访问 [http://localhost/doc.html](http://localhost/doc.html)
   
 
 ![效果](https://github.com/duanxq1994/springboot-mybatis-demo/blob/master/image/example.png?raw=true)

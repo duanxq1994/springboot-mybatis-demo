@@ -18,7 +18,6 @@ import tk.mybatis.spring.annotation.MapperScan;
 @EnableCaching
 @EnableAsync
 @MapperScan("com.xinge.demo.mapper")
-@Slf4j
 public class Application extends SpringBootServletInitializer {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
