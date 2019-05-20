@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Api(tags = "${tableClass.shortClassName}")
 @RestController
-@RequestMapping("${tableClass.variableName}")
+@RequestMapping("admin/${tableClass.variableName}")
 public class ${tableClass.shortClassName}${suffix} {
 
     @Autowired

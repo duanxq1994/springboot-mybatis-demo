@@ -1,5 +1,5 @@
 CREATE DATABASE IF NOT EXISTS `testdb` CHARACTER SET UTF8;
-CREATE TABLE If NOT EXISTS `testdb`.`test_user` (
+CREATE TABLE If NOT EXISTS `testdb`.`user` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL COMMENT '账户名',
   `password` varchar(255) NOT NULL COMMENT '密码',
@@ -19,7 +19,7 @@ CREATE TABLE If NOT EXISTS `testdb`.`test_user` (
 );
 
 -- user:admin password:admin
-INSERT INTO `testdb`.`test_user` (`id`, `name`, `password`, `salt`, `status`, `remark`, `email`, `mobile`, `type`, `version`, `create_time`, `token`, `token_expire_time`, `deleted`)
+INSERT INTO `testdb`.`user` (`id`, `name`, `password`, `salt`, `status`, `remark`, `email`, `mobile`, `type`, `version`, `create_time`, `token`, `token_expire_time`, `deleted`)
 VALUES
   ('1', 'admin', '6e5f801f273066d592c048b38e870d2a', 'RaGapN', '1', NULL, '', '', '2', '5', '2019-02-23 12:00:00', NULL,
    NULL, '0');
