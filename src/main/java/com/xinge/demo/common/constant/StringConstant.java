@@ -17,8 +17,11 @@ public class StringConstant {
 
     public static final String REQUEST_MAP = "requestResMap";
 
-    public static final String WEB_SESSION_VERIFY_CODE = "web.verify.code";
-    public static final String ADMIN_SESSION_VERIFY_CODE = "admin.verify.code";
+    /**
+     * 登录类型
+     */
+    public static final String LOGIN_TYP_ADMIN = "admin";
+    public static final String LOGIN_TYP_WEB = "web";
 
 
 

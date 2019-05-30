@@ -1,11 +1,10 @@
 package com.xinge.demo.common.util;
 
-import com.xinge.demo.common.constant.StringConstant;
 import com.xinge.demo.core.exception.user.UserNotOnlineException;
-//import com.xinge.demo.model.User;
+import com.xinge.demo.model.User;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.SecurityUtils;
 
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author duanxq
@@ -19,16 +18,12 @@ public class OnlineUtil {
      *
      * @return
      */
-    /*public static User getUser() {
-        HttpServletRequest request = RequestUtil.getRequest();
-        if (request == null) {
-            throw new UserNotOnlineException();
-        }
-        Object user = request.getSession().getAttribute(StringConstant.SESSION_USER);
-        if (user instanceof User && ((User) user).getId() != null) {
-            return (User) user;
+    public static User getUser() {
+        Object principal = SecurityUtils.getSubject().getPrincipal();
+        if (principal instanceof User) {
+            return (User) principal;
         }
         throw new UserNotOnlineException();
-    }*/
+    }
 
 }
