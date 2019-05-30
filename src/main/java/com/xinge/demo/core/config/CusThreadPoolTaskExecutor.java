@@ -2,6 +2,7 @@ package com.xinge.demo.core.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -19,8 +20,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 @Configuration
 public class CusThreadPoolTaskExecutor implements AsyncConfigurer {
 
-    @Override
-    public Executor getAsyncExecutor() {
+    @Bean
+    public ThreadPoolTaskExecutor executor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
         executor.setMaxPoolSize(100);
@@ -33,6 +34,11 @@ public class CusThreadPoolTaskExecutor implements AsyncConfigurer {
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.initialize();
         return executor;
+    }
+
+    @Override
+    public Executor getAsyncExecutor() {
+        return executor();
     }
 
     @Override

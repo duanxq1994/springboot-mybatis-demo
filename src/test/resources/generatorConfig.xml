@@ -74,7 +74,7 @@
 
         <javaModelGenerator targetPackage="${package.model}" targetProject="src/main/java"/>
 
-        <sqlMapGenerator targetPackage="${package.mapper}" targetProject="src/main/resources"/>
+        <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
 
         <table tableName="%">
             <!-- 使用数据库字段原始名字生成属性，false则使用驼峰命名法 -->
