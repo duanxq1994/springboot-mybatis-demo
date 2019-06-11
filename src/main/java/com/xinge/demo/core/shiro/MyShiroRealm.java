@@ -12,6 +12,7 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -46,14 +47,13 @@ public class MyShiroRealm extends AuthorizingRealm {
         }
         MyToken myToken = (MyToken) token;
         String username = myToken.getUsername();
-        String password = String.valueOf(myToken.getPassword());
         String loginType = myToken.getLoginType();
         if (StringConstant.LOGIN_TYP_ADMIN.equals(loginType)) {
             User user = userService.queryByName(username);
             if (user == null) {
                 throw new UnknownAccountException();
             }
-            return new SimpleAuthenticationInfo(user, user.getPassword(), getName());
+            return new SimpleAuthenticationInfo(user, user.getPassword(), ByteSource.Util.bytes(user.getSalt()), getName());
         }
         return null;
     }

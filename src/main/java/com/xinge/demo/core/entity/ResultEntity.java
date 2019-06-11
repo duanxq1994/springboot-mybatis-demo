@@ -20,6 +20,20 @@ public class ResultEntity<T> extends SuccessResult {
         super.setCode(code);
     }
 
+    public ResultEntity(Integer code, String message, String error) {
+        this.setCode(code);
+        this.setMessage(message);
+        this.setError(error);
+        this.setData(null);
+    }
+
+    public ResultEntity(Integer code, String message, String error, T data) {
+        this.setCode(code);
+        this.setMessage(message);
+        this.setError(error);
+        this.setData(data);
+    }
+
     private String message;
 
     private String error;
