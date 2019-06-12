@@ -1,6 +1,6 @@
 package com.xinge.demo.core.config;
 
-import com.xinge.demo.core.exception.CustomDefaultHandlerExceptionResolver;
+import com.xinge.demo.core.exception.CommonExceptionHandler;
 import com.xinge.demo.core.format.TimeStampFormatAnnotationFormatterFactory;
 import com.xinge.demo.core.interception.LoggerInterceptor;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +27,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
-        exceptionResolvers.set(2, new CustomDefaultHandlerExceptionResolver());
+        exceptionResolvers.set(2, new CommonExceptionHandler());
         super.extendHandlerExceptionResolvers(exceptionResolvers);
     }
 

@@ -1,6 +1,7 @@
 package com.xinge.demo.core.exception;
 
 import com.xinge.demo.common.constant.StringConstant;
+import com.xinge.demo.common.util.MapUtil;
 import com.xinge.demo.common.util.RequestUtil;
 import com.xinge.demo.core.entity.ResultEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -16,8 +17,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author BG343674
@@ -25,7 +29,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Slf4j
 @RestControllerAdvice
-public class CommonExceptionHandler {
+public class CommonExceptionHandler extends DefaultHandlerExceptionResolver {
 
     @ExceptionHandler(BizException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -86,6 +90,25 @@ public class CommonExceptionHandler {
         return createResultEntity(new ResultEntity(code, message, message));
     }
 
+
+    @Override
+    protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
+        ModelAndView modelAndView = super.doResolveException(request, response, handler, ex);
+        if (modelAndView != null) {
+            return modelAndView;
+        }
+        return handleException(ex, request, response, handler);
+    }
+
+    private ModelAndView handleException(Exception ex, HttpServletRequest request, HttpServletResponse response, Object handler) {
+        response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
+        Integer code = ErrorCode.SYSTEM_ERROR.getCode();
+        String error = ExceptionUtils.getRootCauseMessage(ex);
+        String message = ErrorCode.SYSTEM_ERROR.getMsg();
+        log.warn(message, ex);
+        return createResultEntity(new ResultEntity(code, error, message));
+    }
+
     /**
      * 生成返回的实体
      *
@@ -95,7 +118,9 @@ public class CommonExceptionHandler {
     private ModelAndView createResultEntity(ResultEntity resultEntity) {
         HttpServletRequest request = RequestUtil.getRequest();
         request.setAttribute(StringConstant.REQUEST_MAP, resultEntity);
-        return MvUtil.entity2MV(resultEntity);
+        MappingJackson2JsonView view = new MappingJackson2JsonView();
+        view.setAttributesMap(MapUtil.beanToMap(resultEntity));
+        return new ModelAndView(view);
     }
 
 }
