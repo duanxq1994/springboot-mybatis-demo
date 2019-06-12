@@ -15,7 +15,7 @@ public enum ErrorCode {
     ARGUMENTS_ERROR(3, "参数错误"),
     BIZ_ERROR(4, "业务异常"),
 
-
+    USER_LOGIN_ERROR(1000, "用户密码不匹配"),
     USER_NOT_ONLINE(1001, "未登录"),
     OTHER_ERROR(9999, "其它异常");
 

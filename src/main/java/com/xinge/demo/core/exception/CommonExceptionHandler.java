@@ -6,8 +6,12 @@ import com.xinge.demo.core.entity.ResultEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.shiro.authc.UnknownAccountException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -48,6 +52,38 @@ public class CommonExceptionHandler {
         String message = ErrorCode.PERSISTENCE_ERROR.getMsg();
         log.warn("", e);
         return createResultEntity(new ResultEntity(code, error, message));
+    }
+
+    @ExceptionHandler(BindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ModelAndView handleBindException(BindException e) {
+        Integer code = ErrorCode.ARGUMENTS_ERROR.getCode();
+        String message = e.getFieldError().getDefaultMessage();
+        String error = message;
+        //错误信息长度限制为20
+        int lengthLimit = 20;
+        if (StringUtils.isBlank(message) || message.length() > lengthLimit) {
+            message = ErrorCode.ARGUMENTS_ERROR.getMsg();
+        }
+        return createResultEntity(new ResultEntity(code, error, message));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ModelAndView handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        Integer code = ErrorCode.ARGUMENTS_ERROR.getCode();
+        FieldError fieldError = e.getBindingResult().getFieldError();
+        String message = StringUtils.defaultIfEmpty(fieldError.getDefaultMessage(), ErrorCode.ARGUMENTS_ERROR.getMsg());
+        String error = String.format("[%s]%s", fieldError.getField(), message);
+        return createResultEntity(new ResultEntity(code, error, message));
+    }
+
+    @ExceptionHandler(UnknownAccountException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ModelAndView handleUnknownAccountException(UnknownAccountException e) {
+        Integer code = ErrorCode.USER_LOGIN_ERROR.getCode();
+        String message = StringUtils.defaultIfEmpty(e.getMessage(), ErrorCode.USER_LOGIN_ERROR.getMsg());
+        return createResultEntity(new ResultEntity(code, message, message));
     }
 
     /**

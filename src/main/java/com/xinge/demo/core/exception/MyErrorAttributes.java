@@ -21,9 +21,7 @@ public class MyErrorAttributes extends DefaultErrorAttributes {
         ResultEntity resultEntity = new ResultEntity();
         resultEntity.setCode((Integer) errorAttributes.get("status"));
         resultEntity.setMessage((String) errorAttributes.get("error"));
-        resultEntity.setError((String) errorAttributes.get("message"));
-        errorAttributes.putAll(MapUtil.beanToMap(resultEntity));
-        return errorAttributes;
+        return MapUtil.beanToMap(resultEntity);
     }
 
     @Override

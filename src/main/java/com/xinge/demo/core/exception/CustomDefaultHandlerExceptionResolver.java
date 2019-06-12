@@ -4,21 +4,16 @@ import com.xinge.demo.common.constant.StringConstant;
 import com.xinge.demo.common.util.RequestUtil;
 import com.xinge.demo.core.entity.ResultEntity;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindException;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
- * 全局异常处理
+ * 全局异常exception处理
  *
  * @author duanxq
  * @date 2017/12/1
@@ -33,30 +28,6 @@ public class CustomDefaultHandlerExceptionResolver extends DefaultHandlerExcepti
             return modelAndView;
         }
         return handleException(ex, request, response, handler);
-    }
-
-    @Override
-    protected ModelAndView handleBindException(BindException ex, HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        response.setStatus(HttpStatus.BAD_REQUEST.value());
-        Integer code = ErrorCode.ARGUMENTS_ERROR.getCode();
-        String message = ex.getFieldError().getDefaultMessage();
-        String error = message;
-        //错误信息长度限制为20
-        int lengthLimit = 20;
-        if (StringUtils.isBlank(message) || message.length() > lengthLimit) {
-            message = ErrorCode.ARGUMENTS_ERROR.getMsg();
-        }
-        return createResultEntity(new ResultEntity(code, error, message));
-    }
-
-    @Override
-    protected ModelAndView handleMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
-        response.setStatus(HttpStatus.BAD_REQUEST.value());
-        Integer code = ErrorCode.ARGUMENTS_ERROR.getCode();
-        FieldError fieldError = ex.getBindingResult().getFieldError();
-        String message = StringUtils.defaultIfBlank(fieldError.getDefaultMessage(), ErrorCode.ARGUMENTS_ERROR.getMsg());
-        String error = String.format("[%s]%s", fieldError.getField(), message);
-        return createResultEntity(new ResultEntity(code, error, message));
     }
 
     private ModelAndView handleException(Exception ex, HttpServletRequest request, HttpServletResponse response, Object handler) {
