@@ -24,8 +24,4 @@ public class MyErrorAttributes extends DefaultErrorAttributes {
         return MapUtil.beanToMap(resultEntity);
     }
 
-    @Override
-    public Throwable getError(RequestAttributes requestAttributes) {
-        return super.getError(requestAttributes);
-    }
 }

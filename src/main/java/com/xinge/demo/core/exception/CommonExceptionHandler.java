@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.shiro.authc.UnknownAccountException;
+import org.springframework.core.Ordered;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindException;
@@ -16,8 +17,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,7 +30,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Slf4j
 @RestControllerAdvice
-public class CommonExceptionHandler extends DefaultHandlerExceptionResolver {
+public class CommonExceptionHandler implements HandlerExceptionResolver, Ordered {
 
     @ExceptionHandler(BizException.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -90,17 +91,8 @@ public class CommonExceptionHandler extends DefaultHandlerExceptionResolver {
         return createResultEntity(new ResultEntity(code, message, message));
     }
 
-
     @Override
-    protected ModelAndView doResolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
-        ModelAndView modelAndView = super.doResolveException(request, response, handler, ex);
-        if (modelAndView != null) {
-            return modelAndView;
-        }
-        return handleException(ex, request, response, handler);
-    }
-
-    private ModelAndView handleException(Exception ex, HttpServletRequest request, HttpServletResponse response, Object handler) {
+    public ModelAndView resolveException(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) {
         response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         Integer code = ErrorCode.SYSTEM_ERROR.getCode();
         String error = ExceptionUtils.getRootCauseMessage(ex);
@@ -123,4 +115,8 @@ public class CommonExceptionHandler extends DefaultHandlerExceptionResolver {
         return new ModelAndView(view);
     }
 
+    @Override
+    public int getOrder() {
+        return Ordered.LOWEST_PRECEDENCE;
+    }
 }
