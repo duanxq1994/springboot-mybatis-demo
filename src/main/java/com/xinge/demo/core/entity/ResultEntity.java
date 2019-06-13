@@ -16,10 +16,6 @@ public class ResultEntity<T> extends SuccessResult {
     public ResultEntity() {
     }
 
-    public ResultEntity(Integer code) {
-        super.setCode(code);
-    }
-
     public ResultEntity(Integer code, String message, String error) {
         this.setCode(code);
         this.setMessage(message);
