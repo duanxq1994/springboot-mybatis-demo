@@ -13,8 +13,8 @@ import java.util.Map;
 
 
 /**
- * @author BG343674
- * created by BG343674 on 2019/3/11
+ * @author duanxq
+ * created by duanxq on 2019/3/11
  */
 @Configuration
 public class ShiroConfig {

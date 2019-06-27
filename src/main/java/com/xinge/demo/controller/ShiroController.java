@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * @author BG343674
- * created by BG343674 on 2019/5/20
+ * @author duanxq
+ * created by duanxq on 2019/5/20
  */
 @Slf4j
 @RestController

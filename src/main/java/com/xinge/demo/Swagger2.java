@@ -25,8 +25,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author BG343674
- * created by BG343674 on 2019/1/23
+ * @author duanxq
+ * created by duanxq on 2019/1/23
  */
 @Configuration
 @EnableSwagger2

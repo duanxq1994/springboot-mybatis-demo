@@ -4,8 +4,8 @@ import com.xinge.demo.common.constant.StringConstant;
 import org.apache.shiro.authc.UsernamePasswordToken;
 
 /**
- * @author BG343674
- * created by BG343674 on 2019/3/11
+ * @author duanxq
+ * created by duanxq on 2019/3/11
  */
 public class MyToken extends UsernamePasswordToken {
 

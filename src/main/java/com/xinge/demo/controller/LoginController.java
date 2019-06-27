@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * @author BG343674
- * created by BG343674 on 2019/6/11
+ * @author duanxq
+ * created by duanxq on 2019/6/11
  */
 @Api(tags = "Login")
 @RestController

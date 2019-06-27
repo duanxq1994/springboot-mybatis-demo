@@ -6,8 +6,8 @@ import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.crypto.hash.SimpleHash;
 
 /**
- * @author BG343674
- * created by BG343674 on 2019/3/11
+ * @author duanxq
+ * created by duanxq on 2019/3/11
  */
 public class PasswordHelper {
 

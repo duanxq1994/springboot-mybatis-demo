@@ -25,8 +25,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author BG343674
- * created by BG343674 on 2019/6/11
+ * @author duanxq
+ * created by duanxq on 2019/6/11
  */
 @Slf4j
 @RestControllerAdvice

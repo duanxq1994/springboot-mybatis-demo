@@ -5,8 +5,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringValueResolver;
 
 /**
- * @author BG343674
- * created by BG343674 on 2019/2/22
+ * @author duanxq
+ * created by duanxq on 2019/2/22
  */
 @Component
 public class PropertiesUtil implements EmbeddedValueResolverAware {

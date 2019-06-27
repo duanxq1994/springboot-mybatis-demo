@@ -5,8 +5,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * @author BG343674
- * created by BG343674 on 2019/6/11
+ * @author duanxq
+ * created by duanxq on 2019/6/11
  */
 public class PasswordHelperTest {
 

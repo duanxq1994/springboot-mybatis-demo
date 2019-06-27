@@ -4,8 +4,8 @@ import com.alibaba.druid.sql.SQLUtils;
 import com.p6spy.engine.spy.appender.MessageFormattingStrategy;
 
 /**
- * @author BG343674
- * created by BG343674 on 2019/4/19
+ * @author duanxq
+ * created by duanxq on 2019/4/19
  */
 public class P6SpyLogger implements MessageFormattingStrategy {
 
