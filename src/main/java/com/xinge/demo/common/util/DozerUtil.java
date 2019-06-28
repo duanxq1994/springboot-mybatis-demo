@@ -1,6 +1,7 @@
 package com.xinge.demo.common.util;
 
 import com.github.dozermapper.core.Mapper;
+import com.github.pagehelper.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,9 +32,20 @@ public class DozerUtil {
         if (s == null) {
             return null;
         }
-        List<T> list = new ArrayList<>();
-        for (S vs : s) {
-            list.add(this.dozerMapper.map(vs, clz));
+        List<T> list;
+        if (s instanceof Page) {
+            list = new Page<>();
+            List<S> result = ((Page<S>) s).getResult();
+            for (S s1 : result) {
+                ((Page<T>) list).getResult().add(this.dozerMapper.map(s1, clz));
+            }
+            long total = ((Page<S>) s).getTotal();
+            ((Page<T>) list).setTotal(total);
+        } else {
+            list = new ArrayList<>();
+            for (S vs : s) {
+                list.add(this.dozerMapper.map(vs, clz));
+            }
         }
         return list;
     }
