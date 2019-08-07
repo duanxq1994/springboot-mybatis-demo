@@ -20,11 +20,11 @@ public class PasswordHelper {
      */
     public static final int HASH_ITERATIONS = 1;
 
-    public static String encryptPassword(String password) {
+    public static SimpleHash encryptPassword(String password) {
         // 随机字符串作为salt因子
         RandomNumberGenerator randomNumberGenerator = new SecureRandomNumberGenerator();
         String salt = randomNumberGenerator.nextBytes().toHex();
-        return new SimpleHash(ALGORITHM_NAME, password, salt, HASH_ITERATIONS).toHex();
+        return new SimpleHash(ALGORITHM_NAME, password, salt, HASH_ITERATIONS);
     }
 
 }
