@@ -32,6 +32,12 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/v2/api-docs", "anon");
         filterChainDefinitionMap.put("/webjars/bycdao-ui/**", "anon");
         filterChainDefinitionMap.put("/swagger-resources/**", "anon");
+        // druid
+        filterChainDefinitionMap.put("/druid/**", "anon");
+        // ico
+        filterChainDefinitionMap.put("/**/**/*.ico", "anon");
+
+
 
         filterChainDefinitionMap.put("/admin/sys/**", "anon");
         filterChainDefinitionMap.put("/web/sys/**", "anon");
