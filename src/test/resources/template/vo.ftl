@@ -8,7 +8,7 @@ import java.util.Date;
 
 /**
  * @author duanxq
- * Created by duanxq on ${.now?string('yyyy-MM-hh')}.
+ * Created by duanxq on ${.now?string('yyyy-MM-dd')}.
  */
 @Data
 @ApiModel("${tableClass.shortClassName}")

@@ -23,3 +23,16 @@ INSERT INTO `testdb`.`user` (`id`, `name`, `password`, `salt`, `status`, `remark
 VALUES
   ('1', 'admin', 'ee288c8cb70eaa37f670ba077384b5e4', 'RaGapN', '1', NULL, '', '', '2', '5', '2019-02-23 12:00:00', NULL,
    NULL, '0');
+
+CREATE TABLE `order_sequence`
+(
+  `date` varchar(8) NOT NULL COMMENT '日期',
+  `num`  int(11)    NOT NULL DEFAULT '1' COMMENT '订单数量',
+  PRIMARY KEY (`date`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8 COMMENT ='每天订单数量表（用户生成订单号）';
+
+INSERT INTO `testdb`.`order_sequence` (`date`, `num`) VALUES ('20190225', '2');
+INSERT INTO `testdb`.`order_sequence` (`date`, `num`) VALUES ('20190303', '1');
+INSERT INTO `testdb`.`order_sequence` (`date`, `num`) VALUES ('20190323', '1');
+INSERT INTO `testdb`.`order_sequence` (`date`, `num`) VALUES ('20190324', '348');

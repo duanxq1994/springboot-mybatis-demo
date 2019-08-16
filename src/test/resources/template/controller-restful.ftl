@@ -17,7 +17,7 @@ import java.util.List;
 
 /**
  * @author duanxq
- * Created by duanxq on ${.now?string('yyyy-MM-hh')}.
+ * Created by duanxq on ${.now?string('yyyy-MM-dd')}.
  */
 @Api(tags = "${tableClass.shortClassName}")
 @RestController
