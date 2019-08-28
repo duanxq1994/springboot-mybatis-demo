@@ -24,7 +24,7 @@ VALUES
   ('1', 'admin', 'ee288c8cb70eaa37f670ba077384b5e4', 'RaGapN', '1', NULL, '', '', '2', '5', '2019-02-23 12:00:00', NULL,
    NULL, '0');
 
-CREATE TABLE `order_sequence`
+CREATE TABLE If NOT EXISTS `testdb`.`order_sequence`
 (
   `date` varchar(8) NOT NULL COMMENT '日期',
   `num`  int(11)    NOT NULL DEFAULT '1' COMMENT '订单数量',

@@ -1,6 +1,5 @@
 package com.xinge.demo.vo;
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -11,7 +10,6 @@ import java.util.Date;
  * Created by duanxq on 2019-05-03.
  */
 @Data
-@ApiModel("User")
 public class UserVO {
 
     @ApiModelProperty("")

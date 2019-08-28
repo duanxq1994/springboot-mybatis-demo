@@ -1,6 +1,5 @@
 package ${targetPackage};
 
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
@@ -11,7 +10,6 @@ import java.util.Date;
  * Created by duanxq on ${.now?string('yyyy-MM-dd')}.
  */
 @Data
-@ApiModel("${tableClass.shortClassName}")
 public class ${tableClass.shortClassName}${suffix} {
 
 <#if tableClass.allFields??>
