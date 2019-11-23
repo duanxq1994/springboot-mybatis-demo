@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.lang.reflect.Method;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -25,7 +24,7 @@ public class CusThreadPoolTaskExecutor implements AsyncConfigurer {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
         executor.setMaxPoolSize(100);
-        executor.setQueueCapacity(50);
+        executor.setQueueCapacity(500);
         executor.setKeepAliveSeconds(300);
         executor.setThreadNamePrefix("taskExecutor-");
 
@@ -43,13 +42,9 @@ public class CusThreadPoolTaskExecutor implements AsyncConfigurer {
 
     @Override
     public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-        return new AsyncUncaughtExceptionHandler() {
-
-            @Override
-            public void handleUncaughtException(Throwable arg0, Method arg1, Object... arg2) {
-                log.error("==========================" + arg0.getMessage() + "=======================", arg0);
-                log.error("exception method:" + arg1.getName());
-            }
+        return (arg0, arg1, arg2) -> {
+            log.error("==========================" + arg0.getMessage() + "=======================", arg0);
+            log.error("exception method:" + arg1.getName());
         };
     }
 }

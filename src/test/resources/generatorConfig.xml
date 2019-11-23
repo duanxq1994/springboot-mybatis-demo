@@ -76,9 +76,9 @@
 
         <sqlMapGenerator targetPackage="mapper" targetProject="src/main/resources"/>
 
-        <table tableName="order_sequence">
+        <table tableName="retry">
             <!-- 使用数据库字段原始名字生成属性，false则使用驼峰命名法 -->
-            <property name="useActualColumnNames" value="false" />
+            <property name="useActualColumnNames" value="true" />
         </table>
     </context>
 </generatorConfiguration>  

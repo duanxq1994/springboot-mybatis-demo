@@ -36,3 +36,16 @@ INSERT INTO `testdb`.`order_sequence` (`date`, `num`) VALUES ('20190225', '2');
 INSERT INTO `testdb`.`order_sequence` (`date`, `num`) VALUES ('20190303', '1');
 INSERT INTO `testdb`.`order_sequence` (`date`, `num`) VALUES ('20190323', '1');
 INSERT INTO `testdb`.`order_sequence` (`date`, `num`) VALUES ('20190324', '348');
+
+CREATE TABLE `retry` (
+     `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+     `uuid` varchar(100) NOT NULL COMMENT 'uuid',
+     `startTime` datetime NOT NULL COMMENT '任务开始时间',
+     `retryTime` datetime NOT NULL COMMENT '下次重试时间',
+     `className` varchar(255) NOT NULL,
+     `methodName` varchar(255) NOT NULL,
+     `paramValueJsonStr` blob NOT NULL,
+     `attemptTimes` int(11) NOT NULL,
+     `status` int(11) NOT NULL,
+     PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
